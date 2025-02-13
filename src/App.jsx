@@ -1,10 +1,15 @@
-import Navbar from "./components/Navbar";
+import { Route, Routes } from "react-router-dom";
+import PublicLayout from "./Layouts/PublicLayout";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <>
-      <Navbar />
-      <div className="bg-red-600 text-gray-900">omar gad</div>
+      <Routes>
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+        </Route>
+      </Routes>
     </>
   );
 }
