@@ -1,24 +1,31 @@
 import { useForm } from "react-hook-form";
 import { RiImageAddLine } from "react-icons/ri";
-import { useRef } from "react";
+import { useState } from "react";
+import { useAddPostMutation } from "../../../redux/postsApi";
 
 export default function AddPost() {
+  const [addPost] = useAddPostMutation();
   const { register, handleSubmit, watch, reset } = useForm();
-  const textareaRef = useRef(null);
-
-  // Get selected file name
+  const [previewImage, setPreviewImage] = useState(null);
   const selectedFile = watch("image");
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    reset(); 
+  // Handle Image Preview
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file));
+    }
   };
 
-  // Auto-expand textarea height
-  const handleInput = () => {
-    const textarea = textareaRef.current;
-    textarea.style.height = "auto"; // Reset height to recalculate
-    textarea.style.height = `${textarea.scrollHeight}px`; // Set new height
+  const onSubmit = async (data) => {
+    const newPost = {
+      postText: data.postText,
+      image: previewImage || null, // Store URL if available (Firebase Storage should be used instead)
+    };
+
+    await addPost(newPost);
+    reset();
+    setPreviewImage(null);
   };
 
   return (
@@ -35,8 +42,6 @@ export default function AddPost() {
         />
         <textarea
           {...register("postText", { required: true })}
-          ref={textareaRef}
-          onInput={handleInput}
           className="bg-gray-400/20 rounded-lg flex-1 ring-0 outline-none px-4 py-1 max-h-[200px] overflow-y-auto resize-none"
           placeholder="What's on your mind?"
         />
@@ -56,8 +61,17 @@ export default function AddPost() {
           {...register("image")}
           type="file"
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          onChange={handleImageChange}
         />
       </label>
+
+      {previewImage && (
+        <img
+          src={previewImage}
+          alt="Preview"
+          className="w-32 h-32 object-cover rounded-lg"
+        />
+      )}
     </form>
   );
 }
