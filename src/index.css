@@ -5,9 +5,12 @@
 .active {
   color: white;
   position: relative;
+  background-color: #1617194b;
+  padding: 4px;
+  border-radius: 8px;
 }
 
-.active::after {
+/* .active::after {
   content: "";
   position: absolute;
   bottom: -6px;
@@ -17,7 +20,7 @@
   background-color: #580b0b;
   animation: borderGrow 0.5s ease-out forwards;
   transform-origin: left;
-}
+} */
 
 @keyframes borderGrow {
   from {
