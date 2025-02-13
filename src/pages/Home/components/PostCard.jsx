@@ -1,6 +1,7 @@
 import { AiOutlineMessage } from "react-icons/ai";
 import { FaRegBookmark, FaRegHeart } from "react-icons/fa6";
 import { RiShareForwardLine } from "react-icons/ri";
+import { formatTimestamp } from "../../../Helpers/formatTimestamp";
 
 const PostCard = ({ post }) => {
   console.log(post);
@@ -14,10 +15,12 @@ const PostCard = ({ post }) => {
         />
         <div className="flex flex-col ">
           <p className="text-black text-sm font-semibold">{post.displayName}</p>
-          <p className="text-gray-500 text-xs">3 Aug at 4:21 pm</p>
+          <p className="text-gray-500 text-xs">
+            {formatTimestamp(post.timestamp)}
+          </p>
         </div>
       </div>
-      <p>ahln ramdan</p>
+      <p className="text-gray-500 pt-3 text-sm px-4">{post.post}</p>
       <img src={post.img} alt="" className="w-full rounded-lg mt-4" />
       <div className="w-full border-t boder-2 mt-3 p-2 text-gray-500  flex justify-between items-center gap-4 text-sm md:text-base">
         <div className=" flex justify-start items-center gap-4">
