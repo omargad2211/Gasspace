@@ -4,7 +4,7 @@ import { RiShareForwardLine } from "react-icons/ri";
 import { formatTimestamp } from "../../../Helpers/formatTimestamp";
 
 const PostCard = ({ post }) => {
-  console.log(post);
+  // console.log(post);
   return (
     <div className="bg-white p-2 mt-2">
       <div className="flex justify-start items-center gap-2">
@@ -21,7 +21,11 @@ const PostCard = ({ post }) => {
         </div>
       </div>
       <p className="text-gray-500 pt-3 text-sm px-4">{post.post}</p>
-      <img src={post.img} alt="" className="w-full rounded-lg mt-4" />
+      <img
+        src={post.img || post.image}
+        alt=""
+        className="w-full rounded-lg mt-4"
+      />
       <div className="w-full border-t boder-2 mt-3 p-2 text-gray-500  flex justify-between items-center gap-4 text-sm md:text-base">
         <div className=" flex justify-start items-center gap-4">
           <div className="flex items-center justify-center gap-1">
