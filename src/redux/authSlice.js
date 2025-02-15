@@ -20,14 +20,18 @@ const authSlice = createSlice({
 export const { setUser } = authSlice.actions;
 
 export const authListener = () => (dispatch) => {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
+      // Wait a bit to allow Firebase to update the photoURL
+      await user.reload();
+      const refreshedUser = auth.currentUser;
+
       dispatch(
         setUser({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
+          uid: refreshedUser.uid,
+          email: refreshedUser.email,
+          displayName: refreshedUser.displayName,
+          photoURL: refreshedUser.photoURL, // Ensure updated photoURL
         })
       );
     } else {
@@ -35,5 +39,6 @@ export const authListener = () => (dispatch) => {
     }
   });
 };
+
 
 export default authSlice.reducer;

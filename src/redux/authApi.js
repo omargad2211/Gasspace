@@ -22,6 +22,7 @@ export const authApi = createApi({
             const storageRef = ref(storage, `usersImages/${displayName}`);
             const uploadTask = uploadBytesResumable(storageRef, img);
 
+            // Wait for image upload to complete
             await new Promise((resolve, reject) => {
               uploadTask.on(
                 "state_changed",
@@ -35,18 +36,26 @@ export const authApi = createApi({
             });
           }
 
+          // Update user profile with displayName and photoURL
           await updateProfile(res.user, { displayName, photoURL });
 
-          await setDoc(doc(db, "users", res.user.uid), {
-            uid: res.user.uid,
-            displayName,
-            email,
-            photoURL,
+          // Reload user to get updated profile info
+          await res.user.reload();
+          const updatedUser = auth.currentUser;
+
+          // Store user details in Firestore
+          await setDoc(doc(db, "users", updatedUser.uid), {
+            uid: updatedUser.uid,
+            displayName: updatedUser.displayName,
+            email: updatedUser.email,
+            photoURL: updatedUser.photoURL,
           });
 
-          await setDoc(doc(db, "usersPosts", res.user.uid), { messages: [] });
+          await setDoc(doc(db, "usersPosts", updatedUser.uid), {
+            messages: [],
+          });
 
-          return { data: res.user };
+          return { data: updatedUser }; // Return updated user
         } catch (error) {
           return { error: error.message };
         }
