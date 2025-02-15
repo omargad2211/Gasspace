@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { currentUser } = useSelector((state) => state.auth);
 
   return (
     <nav className="z-[9999] fixed w-full px-8  bg-white">
@@ -25,14 +27,18 @@ const Navbar = () => {
           />
           <IoIosSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
         </label>
-        <Link className="flex justify-center items-center gap-2">
+        <Link to={'/profile'} className="flex justify-center items-center gap-2 ml-2">
           <img
-            src="public\images\User-Profile-PNG-Clipart.png"
+            src={
+              currentUser?.photoURL ||
+              "publicimagesUser-Profile-PNG-Clipart.png"
+            }
             alt="profile"
             className="size-8 rounded-full"
           />
           <p className="text-xs md:text-base font-semibold text-nowrap">
-            User Name
+            {currentUser?.displayName || "User Name"}
+          
           </p>
         </Link>
       </div>
