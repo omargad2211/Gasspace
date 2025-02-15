@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaPeoplePulling } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const navigation = [
@@ -21,17 +22,26 @@ const Sidebar = () => {
       icon: <IoPersonOutline />,
     },
   ];
+
+  const { currentUser } = useSelector((state) => state.auth);
+
   return (
     <div className="bg-primary fixed left-0 top-20 md:top-24 flex flex-col justify-start items-start gap-4 px-2 h-screen">
       <div className="hidden md:block bg-white p-4 rounded-lg h-1/5">
         <div className="flex justify-start items-center gap-2">
           <img
-            src="public\images\User-Profile-PNG-Clipart.png"
+            src={
+              currentUser?.photoURL ||
+              "publicimagesUser-Profile-PNG-Clipart.png"
+            }
             alt="profile"
             className="size-8 rounded-full"
           />
           <div className="flex flex-col ">
-            <p className="text-black text-sm font-semibold">full name</p>
+            <p className="text-black text-sm font-semibold">
+              {" "}
+              {currentUser?.displayName || "User Name"}
+            </p>
             <p className="text-gray-500 text-xs">@username</p>
           </div>
         </div>
@@ -50,7 +60,7 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white h-full md:h-1/2 flex flex-col items-start justify-around px-8 gap-4 md:w-full rounded-lg">
+      <div className="bg-white h-full md:h-1/2 flex flex-col items-start justify-around px-4 md:px-8 gap-4 md:w-full rounded-lg">
         {navigation.map((nav, i) => (
           <NavLink
             key={i}
