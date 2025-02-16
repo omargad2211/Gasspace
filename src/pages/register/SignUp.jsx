@@ -29,25 +29,31 @@ const SignUpForm = () => {
         navigate("/");
       }
     } catch (err) {
-      setError("Error creating user: " + err);
+      setError("Error creating account. Please try again.");
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row justify-center items-center gap-10 lg:gap-20 px-4 lg:px-10 py-10 lg:py-0 min-h-screen bg-orange-300 text-slate-200">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-teal-600 p-6 lg:p-8 rounded shadow-md w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center text-gray-900">
+          Sign Up
+        </h2>
+        <p className="text-center text-gray-600 text-sm mb-4">
+          It’s quick and easy.
+        </p>
 
         {/* Profile Picture */}
-        <div className="mb-4 flex justify-center">
+        <div className="flex justify-center mb-4">
           <label htmlFor="file">
             <img
-              src={img ? URL.createObjectURL(img) : "/assets/OIP.jpeg"}
+              src={
+                img
+                  ? URL.createObjectURL(img)
+                  : "images/User-Profile-PNG-Clipart.png"
+              }
               alt="Profile Preview"
-              className="rounded-full w-16 h-16 cursor-pointer mb-4"
+              className="rounded-full w-16 h-16 cursor-pointer "
             />
           </label>
           <input
@@ -59,48 +65,34 @@ const SignUpForm = () => {
           />
         </div>
 
-        {/* Full Name */}
-        <div className="mb-4">
-          <label htmlFor="displayName" className="block text-slate-200 mb-2">
-            Full Name
-          </label>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Full Name */}
           <input
             type="text"
-            id="displayName"
             {...register("displayName", { required: "Full name is required" })}
-            className="w-full text-black bg-white px-3 py-2 border border-gray-300 rounded"
             placeholder="Full Name"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
           {errors.displayName && (
-            <span className="text-red-500">{errors.displayName.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.displayName.message}
+            </span>
           )}
-        </div>
 
-        {/* Email */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-slate-200 mb-2">
-            Email
-          </label>
+          {/* Email */}
           <input
             type="email"
-            id="email"
             {...register("email", { required: "Email is required" })}
-            className="w-full text-black bg-white px-3 py-2 border border-gray-300 rounded"
-            placeholder="Your Email"
+            placeholder="Email address"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
           {errors.email && (
-            <span className="text-red-500">{errors.email.message}</span>
+            <span className="text-red-500 text-sm">{errors.email.message}</span>
           )}
-        </div>
 
-        {/* Password */}
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-slate-200 mb-2">
-            Password
-          </label>
+          {/* Password */}
           <input
             type="password"
-            id="password"
             {...register("password", {
               required: "Password is required",
               minLength: {
@@ -108,60 +100,50 @@ const SignUpForm = () => {
                 message: "Password must be at least 6 characters",
               },
             })}
-            className="w-full text-black bg-white px-3 py-2 border border-gray-300 rounded"
-            placeholder="Your Password"
+            placeholder="New Password"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
           {errors.password && (
-            <span className="text-red-500">{errors.password.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.password.message}
+            </span>
           )}
-        </div>
 
-        {/* Confirm Password */}
-        <div className="mb-4">
-          <label
-            htmlFor="confirmPassword"
-            className="block text-slate-200 mb-2"
-          >
-            Confirm Password
-          </label>
+          {/* Confirm Password */}
           <input
             type="password"
-            id="confirmPassword"
             {...register("confirmPassword", {
               required: "Confirm password is required",
               validate: (value) =>
                 value === watch("password") || "Passwords do not match",
             })}
-            className="w-full text-black bg-white px-3 py-2 border border-gray-300 rounded"
             placeholder="Confirm Password"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           />
           {errors.confirmPassword && (
-            <span className="text-red-500">
+            <span className="text-red-500 text-sm">
               {errors.confirmPassword.message}
             </span>
           )}
-        </div>
 
-        {/* Buttons */}
-        <div className="flex justify-between items-center mt-6">
-          <Link to="/">
+          {/* Error Message */}
+          {error && <span className="text-red-500 text-sm">{error}</span>}
+
+          {/* Buttons */}
+          <div className="flex flex-col items-center gap-3">
             <button
-              type="button"
-              className="btn bg-orange-600 text-white hover:bg-orange-500"
+              type="submit"
+              className="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition"
+              disabled={isLoading}
             >
-              Cancel
+              {isLoading ? "Signing Up..." : "Sign Up"}
             </button>
-          </Link>
-          <button
-            type="submit"
-            className="btn text-white bg-teal-400 hover:bg-teal-300"
-            disabled={isLoading}
-          >
-            {isLoading ? "Signing Up..." : "Sign Up"}
-          </button>
-        </div>
-        {error && <span className="text-red-500 mt-4 block">{error}</span>}
-      </form>
+            <Link to="/login" className="text-blue-500 text-sm hover:underline">
+              Already have an account? Log in
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
