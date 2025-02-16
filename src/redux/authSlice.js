@@ -49,14 +49,15 @@ export const authListener = () => (dispatch) => {
     if (user) {
       // Reload to get latest data
       await user.reload();
-      const refreshedUser = auth.currentUser;
+        const refreshedUser = auth.currentUser;
+        // console.log(refreshedUser.metadata.creationTime);
 
       // Fetch additional user details from Firestore
       const userDoc = await getDoc(doc(db, "users", refreshedUser.uid));
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
-
+        //   console.log(userData);
         dispatch(
           setUser({
             uid: refreshedUser.uid,
@@ -66,6 +67,7 @@ export const authListener = () => (dispatch) => {
             bioText: userData.bioText || "",
             headerImage: userData.headerImage || "",
             location: userData.location || "",
+            creationTime:refreshedUser.metadata.creationTime
           })
         );
       }

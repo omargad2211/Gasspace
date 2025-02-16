@@ -6,6 +6,7 @@ import { updateUser } from "../../redux/authSlice";
 import { FaEdit } from "react-icons/fa";
 import { useGetPostsQuery } from "../../redux/postsApi";
 import PostCard from "../Home/components/PostCard";
+import { formatMonthYear } from "../../Helpers/formatDate";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.auth);
@@ -14,7 +15,8 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { data: posts, error } = useGetPostsQuery();
   const userPosts = posts?.filter((post) => post?.uid === currentUser?.uid);
-  //   console.log(userPosts);
+//   console.log(currentUser);
+
   const {
     register,
     handleSubmit,
@@ -47,7 +49,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px]  md:px-[20%]">
+    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px] ss:pl-[150px]  md:px-[20%]">
       <main className="flex-grow w-full">
         <header className="flex justify-between items-center bg-white p-4 border-b">
           <h2 className="text-xl font-semibold">Profile</h2>
@@ -88,7 +90,9 @@ const Profile = () => {
                 <span className="text-gray-600">
                   Location: {currentUser?.location || "Not set"}
                 </span>
-                <span className="text-gray-600">Joined: July 2024</span>
+                <span className="text-gray-600">
+                  Joined: {formatMonthYear(currentUser?.creationTime)}
+                </span>
               </div>
             </div>
           ) : (
