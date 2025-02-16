@@ -31,7 +31,7 @@ const Navbar = () => {
           <img
             src={
               currentUser?.photoURL ||
-              "publicimagesUser-Profile-PNG-Clipart.png"
+              "images/User-Profile-PNG-Clipart.png"
             }
             alt="profile"
             className="size-8 rounded-full"

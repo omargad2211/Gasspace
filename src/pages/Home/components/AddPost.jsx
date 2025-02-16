@@ -86,7 +86,9 @@ export default function AddPost() {
       {/* Post Input */}
       <div className="flex gap-2 items-center">
         <img
-          src="/images/User-Profile-PNG-Clipart.png"
+          src={
+            currentUser?.photoURL || "images/User-Profile-PNG-Clipart.png"
+          }
           alt="profile"
           className="size-8 rounded-full"
         />
