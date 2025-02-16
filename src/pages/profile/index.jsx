@@ -62,7 +62,7 @@ const Profile = () => {
           </button>
         </header>
 
-        <section className="p-4">
+        <section className="py-4">
           <div className="relative">
             <img
               src={
