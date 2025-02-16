@@ -26,8 +26,8 @@ const Sidebar = () => {
   const { currentUser } = useSelector((state) => state.auth);
 
   return (
-    <div className="bg-primary fixed left-0 top-20 md:top-24 flex flex-col justify-start items-start gap-4 px-2 h-screen">
-      <div className="hidden md:block bg-white p-4 rounded-lg h-1/5">
+    <div className="bg-primary fixed left-0 top-20 md:top-24 flex flex-col justify-start items-start gap-4 px-2 h-screen w-1/5">
+      <div className="hidden md:block bg-white p-4 rounded-lg  w-full">
         <div className="flex justify-start items-center gap-2">
           <img
             src={
@@ -38,25 +38,25 @@ const Sidebar = () => {
             className="size-8 rounded-full"
           />
           <div className="flex flex-col ">
-            <p className="text-black text-sm font-semibold">
+            <p className="text-black  md:text-xs lg:text-sm font-semibold">
               {" "}
               {currentUser?.displayName || "User Name"}
             </p>
             <p className="text-gray-500 text-xs">@username</p>
           </div>
         </div>
-        <div className="flex justify-between items-center gap-2 pt-4">
+        <div className="flex justify-between items-center gap-1 pt-4 flex-wrap text-sm">
           <div className="text-center">
             <p>2.3K</p>
-            <p>followers</p>
+            <p className="text-xs">followers</p>
           </div>
           <div className="text-center">
             <p>2.3K</p>
-            <p>following</p>
+            <p className="text-xs">following</p>
           </div>
           <div className="text-center">
             <p>23</p>
-            <p>posts</p>
+            <p className="text-xs">posts</p>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ const Sidebar = () => {
         <div></div>
         {/* <p className="text-black">ahmed</p> */}
       </div>
-      <div className="hidden md:flex flex-wrap justify-start gap-3 items-center text-gray-500 max-w-[216px] ">
+      <div className="hidden md:flex flex-wrap justify-start gap-2 items-center text-gray-500 w-full text-xs lg:text-base lg:gap-3 ">
         <p>privacy terms</p>
         <p>copy rights</p>
         <p>@2025</p>
