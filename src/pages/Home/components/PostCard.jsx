@@ -15,7 +15,7 @@ import {
 } from "../../../redux/likesApi";
 
 const PostCard = ({ post }) => {
-  console.log(post);
+  // console.log(post);
   const { currentUser } = useSelector((state) => state.auth);
 
   // Fetch comments related to this post

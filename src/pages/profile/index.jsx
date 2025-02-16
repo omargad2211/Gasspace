@@ -14,7 +14,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { data: posts, error } = useGetPostsQuery();
   const userPosts = posts?.filter((post) => post?.uid === currentUser?.uid);
-  console.log(userPosts);
+//   console.log(userPosts);
   const {
     register,
     handleSubmit,

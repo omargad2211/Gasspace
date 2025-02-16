@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 export default function AddPost() {
   const { currentUser } = useSelector((state) => state.auth);
-  console.log(currentUser);
+  // console.log(currentUser);
   const [addPost] = useAddPostMutation();
   const { register, handleSubmit, watch, reset } = useForm();
   const [previewImage, setPreviewImage] = useState(null);
@@ -35,10 +35,10 @@ export default function AddPost() {
           // Track upload progress (optional)
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
+          // console.log("Upload is " + progress + "% done");
         },
         (error) => {
-          console.error("Upload failed:", error);
+          // console.error("Upload failed:", error);
           reject(error);
         },
         async () => {
@@ -52,13 +52,13 @@ export default function AddPost() {
   const onSubmit = async (data) => {
     setUploading(true);
     let imageUrl = null;
-    console.log(data);
+    // console.log(data);
 
     if (data.image && data.image[0]) {
       try {
         imageUrl = await uploadImage(data.image[0]);
       } catch (error) {
-        console.error("Error uploading image:", error);
+        // console.error("Error uploading image:", error);
         setUploading(false);
         return;
       }
