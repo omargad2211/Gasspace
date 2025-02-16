@@ -5,10 +5,9 @@ import PostCard from "./components/PostCard";
 const Home = () => {
   const { data: posts, error, isLoading } = useGetPostsQuery();
 
-  console.log(posts);
 
   return (
-    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[70px] md:pl-[240px]">
+    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[70px]  md:px-[20%]">
       <AddPost />
       {posts?.map((post) => (
         <PostCard key={post.id} post={post} />
