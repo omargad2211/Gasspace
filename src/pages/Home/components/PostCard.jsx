@@ -158,11 +158,24 @@ const PostCard = ({ post }) => {
           ) : comments?.length > 0 ? (
             <ul className="mt-2">
               {comments.map((comment) => (
-                <li key={comment.id} className="border-b py-2 text-sm">
-                  <strong className="text-gray-800">
-                    {comment.displayName}:
-                  </strong>{" "}
-                  {comment.comment}
+                <li
+                  key={comment.id}
+                  className="border-b py-2 text-sm flex flex-col items-start gap-2 "
+                >
+                  <div className="flex items-end gap-1">
+                    <img
+                      src={
+                        comment?.photoURL ||
+                        "publicimagesUser-Profile-PNG-Clipart.png"
+                      }
+                      alt="profile"
+                      className="size-8 rounded-full"
+                    />
+                    <p className="text-xs md:text-base font-semibold text-gray-600 text-nowrap">
+                      {comment?.displayName}
+                    </p>
+                  </div>
+                  <p className="px-8">{comment.comment}</p>
                 </li>
               ))}
             </ul>
