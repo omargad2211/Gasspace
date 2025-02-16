@@ -10,14 +10,14 @@ const PublicLayout = () => {
       <Navbar />
 
       {/* Sidebar + Content */}
-      <div>
+      <div className="">
         {/* Sidebar */}
         <Sidebar />
 
         {/* Main Content Area */}
-        <main className="">
+       
           <Outlet />
-        </main>
+     
         <LeftSidebar/>
       </div>
     </div>

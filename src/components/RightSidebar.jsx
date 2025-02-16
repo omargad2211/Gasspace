@@ -1,10 +1,23 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaPeoplePulling } from "react-icons/fa6";
 import { IoPersonOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/firbase";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User logged out");
+      navigate("/register");
+    } catch (error) {
+      console.error("Logout Error: ", error);
+    }
+  };
+
   const navigation = [
     {
       title: "Feed",
@@ -27,39 +40,42 @@ const Sidebar = () => {
 
   return (
     <div className="bg-primary fixed left-0 top-20 md:top-24 flex flex-col justify-start items-start gap-4 px-2 h-screen w-1/5">
-      <div className="hidden md:block bg-white p-4 rounded-lg  w-full">
-        <div className="flex justify-start items-center gap-2">
-          <img
-            src={
-              currentUser?.photoURL ||
-              "publicimagesUser-Profile-PNG-Clipart.png"
-            }
-            alt="profile"
-            className="size-8 rounded-full"
-          />
-          <div className="flex flex-col ">
-            <p className="text-black  md:text-xs lg:text-sm font-semibold">
-              {" "}
-              {currentUser?.displayName || "User Name"}
-            </p>
-            <p className="text-gray-500 text-xs">@username</p>
+      {currentUser && (
+        <div className="hidden md:block bg-white p-4 rounded-lg  w-full">
+          <div className="flex justify-start items-center gap-2">
+            <img
+              src={
+                currentUser?.photoURL ||
+                "images/User-Profile-PNG-Clipart.png"
+              }
+              alt="profile"
+              className="size-8 rounded-full"
+            />
+            <div className="flex flex-col ">
+              <p className="text-black  md:text-xs lg:text-sm font-semibold">
+                {" "}
+                {currentUser?.displayName || "User Name"}
+              </p>
+              <p className="text-gray-500 text-xs">@username</p>
+            </div>
+          </div>
+          <div className="flex justify-between items-center gap-1 pt-4 flex-wrap text-sm">
+            <div className="text-center">
+              <p>2.3K</p>
+              <p className="text-xs">followers</p>
+            </div>
+            <div className="text-center">
+              <p>2.3K</p>
+              <p className="text-xs">following</p>
+            </div>
+            <div className="text-center">
+              <p>23</p>
+              <p className="text-xs">posts</p>
+            </div>
           </div>
         </div>
-        <div className="flex justify-between items-center gap-1 pt-4 flex-wrap text-sm">
-          <div className="text-center">
-            <p>2.3K</p>
-            <p className="text-xs">followers</p>
-          </div>
-          <div className="text-center">
-            <p>2.3K</p>
-            <p className="text-xs">following</p>
-          </div>
-          <div className="text-center">
-            <p>23</p>
-            <p className="text-xs">posts</p>
-          </div>
-        </div>
-      </div>
+      )}
+
       <div className="bg-white h-full md:h-1/2 flex flex-col items-start justify-around px-4 md:px-8 gap-4 md:w-full rounded-lg">
         {navigation.map((nav, i) => (
           <NavLink
@@ -73,7 +89,33 @@ const Sidebar = () => {
             </p>
           </NavLink>
         ))}
-        <div></div>
+        {currentUser ? (
+          <button
+            className="text-gray-500 flex justify-center items-center gap-2 w-full text-xs md:text-lg"
+            onClick={() => {
+              handleLogout();
+              // setMenuOpen(false); // Close menu after logout
+            }}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              height="1em"
+              width="1em"
+            >
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path d="M5 11h8v2H5v3l-5-4 5-4v3zm-1 7h2.708a8 8 0 100-12H4a9.985 9.985 0 018-4c5.523 0 10 4.477 10 10s-4.477 10-10 10a9.985 9.985 0 01-8-4z" />
+            </svg>
+            Logout
+          </button>
+        ) : (
+          <Link
+            className="text-gray-500 flex justify-center items-center gap-2 w-full"
+            to={"/login"}
+          >
+            Login
+          </Link>
+        )}
         <div></div>
         {/* <p className="text-black">ahmed</p> */}
       </div>
