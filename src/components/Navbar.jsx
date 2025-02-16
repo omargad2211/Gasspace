@@ -12,7 +12,7 @@ const Navbar = () => {
       <div className="w-full flex justify-between items-center gap-2">
         <Link to="/">
           <img
-            src="public\images\gasspace.png"
+            src="\images\gasspace.png"
             alt="logo"
             className="h-20 w-auto"
           />
