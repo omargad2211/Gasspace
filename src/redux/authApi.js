@@ -1,7 +1,7 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase/firbase";
 
 export const authApi = createApi({
@@ -56,6 +56,21 @@ export const authApi = createApi({
           });
 
           return { data: updatedUser }; // Return updated user
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
+    }),
+    getAllUsers: builder.query({
+      async queryFn() {
+        try {
+          const usersCollection = collection(db, "users");
+          const usersSnapshot = await getDocs(usersCollection);
+          const users = usersSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          return { data: users };
         } catch (error) {
           return { error: error.message };
         }
@@ -152,4 +167,8 @@ export const authApi = createApi({
   }),
 });
 
-export const { useSignUpMutation, useUpdateProfileMutation } = authApi;
+export const {
+  useSignUpMutation,
+  useUpdateProfileMutation,
+  useGetAllUsersQuery,
+} = authApi;
