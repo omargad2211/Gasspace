@@ -7,7 +7,7 @@ const Home = () => {
 
 
   return (
-    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[90px]  md:px-[20%]">
+    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px]  md:px-[20%]">
       <AddPost />
       {posts?.map((post) => (
         <PostCard key={post.id} post={post} />

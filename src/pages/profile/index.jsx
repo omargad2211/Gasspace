@@ -47,7 +47,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[90px]  md:px-[20%]">
+    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px]  md:px-[20%]">
       <main className="flex-grow w-full">
         <header className="flex justify-between items-center bg-white p-4 border-b">
           <h2 className="text-xl font-semibold">Profile</h2>
