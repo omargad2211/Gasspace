@@ -3,8 +3,16 @@ import PublicLayout from "./Layouts/PublicLayout";
 import Home from "./pages/Home";
 import SignUpForm from "./pages/register/SignUp";
 import Profile from "./pages/profile";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { authListener } from "./redux/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(authListener());
+  }, [dispatch]);
   return (
     <>
       <Routes>
