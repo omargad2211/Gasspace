@@ -2,35 +2,36 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa6";
 import { RiShareForwardLine } from "react-icons/ri";
 import { formatTimestamp } from "../../../Helpers/formatTimestamp";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+
 import {
   useAddCommentMutation,
   useGetCommentsQuery,
 } from "../../../redux/commentsApi";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+
 import {
   useAddLikeMutation,
   useGetLikesQuery,
   useRemoveLikeMutation,
 } from "../../../redux/likesApi";
 
+import {
+  useAddRepostMutation,
+  useGetRepostsQuery,
+  useRemoveRepostMutation,
+} from "../../../redux/repostsApi"; // Import repost mutations
+
 const PostCard = ({ post }) => {
   // console.log(post);
   const { currentUser } = useSelector((state) => state.auth);
 
-  // Fetch comments related to this post
+  // Fetch comments
   const { data: comments, isLoading } = useGetCommentsQuery(post.id);
-
-  // Mutation for adding a comment
   const [addComment] = useAddCommentMutation();
-
-  // State for new comment input
   const [commentText, setCommentText] = useState("");
-
-  // State to toggle comment section visibility
   const [showComments, setShowComments] = useState(false);
-
-  // Function to handle comment submission
+  // handle add comment
   const handleAddComment = async () => {
     if (commentText.trim() === "") return;
     await addComment({
@@ -43,14 +44,14 @@ const PostCard = ({ post }) => {
     setCommentText(""); // Clear input after adding comment
   };
 
+  // Fetch likes
   const { data: likes = [] } = useGetLikesQuery(post.id);
-
-  // Mutations for adding and removing likes
   const [addLike] = useAddLikeMutation();
   const [removeLike] = useRemoveLikeMutation();
   const [showLikes, setShowLikes] = useState(false);
   const isLikedByUser = likes.some((like) => like.userID === currentUser?.uid);
 
+  // Handle Like
   const handleLike = async () => {
     if (!currentUser) return;
     if (isLikedByUser) {
@@ -64,6 +65,30 @@ const PostCard = ({ post }) => {
       });
     }
   };
+
+  // Fetch reposts
+  const { data: reposts = [] } = useGetRepostsQuery(post.id);
+  const [addRepost] = useAddRepostMutation();
+  const [removeRepost] = useRemoveRepostMutation();
+  const isRepostedByUser = reposts.some(
+    (repost) => repost.userID === currentUser?.uid
+  );
+
+  // Handle Repost
+  const handleRepost = async () => {
+    if (!currentUser) return;
+    if (isRepostedByUser) {
+      await removeRepost({ postID: post.id, userID: currentUser.uid });
+    } else {
+      await addRepost({
+        postID: post.id,
+        userID: currentUser.uid,
+        photoURL: currentUser.photoURL,
+        displayName: currentUser.displayName,
+      });
+    }
+  };
+
   return (
     <div className="bg-white p-2 mt-2 shadow-md rounded-lg">
       {/* Post Header */}
@@ -121,11 +146,18 @@ const PostCard = ({ post }) => {
             <p>{comments?.length} comments</p>
           </button>
 
-          {/* Share */}
-          <div className="flex items-center justify-center gap-1">
-            <RiShareForwardLine />
-            <p>32 reposts</p>
-          </div>
+          {/* Repost Button */}
+          <button
+            onClick={handleRepost}
+            className="flex items-center justify-center gap-1"
+          >
+            <RiShareForwardLine
+              className={isRepostedByUser ? "text-blue-500" : ""}
+            />
+            <p>
+              {reposts.length} {isRepostedByUser ? "Undo Repost" : "Reposts"}
+            </p>
+          </button>
         </div>
         <FaRegBookmark />
       </div>
