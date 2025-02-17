@@ -3,10 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useUpdateProfileMutation } from "../../redux/authApi";
 import { updateUser } from "../../redux/authSlice";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaRedoAlt } from "react-icons/fa";
 import { useGetPostsQuery } from "../../redux/postsApi";
 import PostCard from "../Home/components/PostCard";
 import { formatMonthYear } from "../../Helpers/formatDate";
+import {
+    useGetAllRepostsQuery,
+  useGetRepostsQuery,
+  useGetUserRepostedPostsQuery,
+} from "../../redux/repostsApi";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.auth);
@@ -15,6 +20,22 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { data: posts } = useGetPostsQuery();
   const userPosts = posts?.filter((post) => post?.uid === currentUser?.uid);
+
+  const { data: reposts, error } = useGetAllRepostsQuery();
+  const userReposts = reposts?.filter(
+    (repost) => repost.userID === currentUser?.uid
+  );
+
+  console.log(userReposts);
+
+  const repostPostIDs = userReposts?.map((repost) => repost.postID);
+
+  // Filter posts that match the repostPostIDs
+  const userRepostedPosts = posts?.filter((post) =>
+    repostPostIDs?.includes(post.id)
+  );
+
+  console.log(userRepostedPosts);
 
   const {
     register,
@@ -69,7 +90,13 @@ const Profile = () => {
       dispatch(updateUser(result.data));
       setIsEditing(false);
     }
-  };
+    };
+    
+  // Combine and sort posts
+const allPosts = [
+  ...(Array.isArray(userPosts) ? userPosts : []),
+  ...(Array.isArray(userRepostedPosts) ? userRepostedPosts : []),
+].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   return (
     <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px] ss:pl-[150px] md:px-[20%]">
@@ -219,12 +246,24 @@ const Profile = () => {
             </ul>
           </div>
 
-          {/* User Posts */}
           <div className="space-y-4">
-            {userPosts?.length === 0 ? (
+            {/* Display all posts mixed with reposts */}
+            {allPosts?.length === 0 ? (
               <p className="text-center text-gray-500">No posts yet.</p>
             ) : (
-              userPosts?.map((post) => <PostCard key={post.id} post={post} />)
+              allPosts?.map((post) => (
+                <div key={post.id}>
+                  {/* If it's a reposted post, display a "Reposted" header */}
+                  {userReposts?.some((repost) => repost.postID === post.id) && (
+                    <div className="flex items-center space-x-2 mb-2">
+                      <FaRedoAlt className="text-gray-600" />
+                      <h4 className="text-sm text-gray-600">Reposted</h4>
+                    </div>
+                  )}
+                  {/* Display the post */}
+                  <PostCard post={post} />
+                </div>
+              ))
             )}
           </div>
         </section>
