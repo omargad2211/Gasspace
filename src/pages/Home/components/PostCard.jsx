@@ -1,6 +1,7 @@
 import { AiOutlineMessage } from "react-icons/ai";
 import { FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa6";
 import { RiShareForwardLine } from "react-icons/ri";
+import { BiRepost } from "react-icons/bi";
 import { formatTimestamp } from "../../../Helpers/formatTimestamp";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -149,14 +150,10 @@ const PostCard = ({ post }) => {
           {/* Repost Button */}
           <button
             onClick={handleRepost}
-            className="flex items-center justify-center gap-1"
+            className={`flex items-center justify-center gap-1 ${isRepostedByUser ? "text-blue-700" : ""}`}
           >
-            <RiShareForwardLine
-              className={isRepostedByUser ? "text-blue-500" : ""}
-            />
-            <p>
-              {reposts.length} {isRepostedByUser ? "Undo Repost" : "Reposts"}
-            </p>
+            <BiRepost className="text-xl" />
+            <p>{reposts.length} reposts</p>
           </button>
         </div>
         <FaRegBookmark />
