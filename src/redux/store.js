@@ -6,6 +6,8 @@ import { authApi } from "./authApi";
 import { commentsApi } from "./commentsApi";
 import { likesApi } from "./likesApi";
 import { repostsApi } from "./repostsApi";
+import { followersApi } from "./followersApi";
+import { notificationsApi } from "./notificationsApi";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +17,8 @@ export const store = configureStore({
     [commentsApi.reducerPath]: commentsApi.reducer,
     [likesApi.reducerPath]: likesApi.reducer,
     [repostsApi.reducerPath]: repostsApi.reducer,
+    [followersApi.reducerPath]: followersApi.reducer,
+    [notificationsApi.reducerPath]: notificationsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -22,6 +26,8 @@ export const store = configureStore({
       authApi.middleware,
       commentsApi.middleware,
       likesApi.middleware,
-      repostsApi.middleware
+      repostsApi.middleware,
+      followersApi.middleware,
+      notificationsApi.middleware
     ),
 });
