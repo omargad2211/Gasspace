@@ -12,6 +12,7 @@ import {
   useGetRepostsQuery,
   useGetUserRepostedPostsQuery,
 } from "../../redux/repostsApi";
+import { BiRepost } from "react-icons/bi";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.auth);
@@ -255,9 +256,9 @@ const allPosts = [
                 <div key={post.id}>
                   {/* If it's a reposted post, display a "Reposted" header */}
                   {userReposts?.some((repost) => repost.postID === post.id) && (
-                    <div className="flex items-center space-x-2 mb-2">
-                      <FaRedoAlt className="text-gray-600" />
-                      <h4 className="text-sm text-gray-600">Reposted</h4>
+                    <div className="flex items-center gap-1 ">
+                      <BiRepost className="text-gray-600 text-xl" />
+                      <h4 className="text-sm text-gray-600">You reposted</h4>
                     </div>
                   )}
                   {/* Display the post */}
