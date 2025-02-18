@@ -3,19 +3,60 @@ import PostCard from "../Home/components/PostCard";
 import { useParams } from "react-router-dom";
 import { useGetAllUsersQuery } from "../../redux/authApi";
 import { useGetPostsQuery } from "../../redux/postsApi";
+import {
+  useFollowUserMutation,
+  useGetUserFollowDataQuery,
+  useUnfollowUserMutation,
+} from "../../redux/followersApi";
+import { useSelector } from "react-redux";
+import { useCreateNotificationMutation } from "../../redux/notificationsApi";
 
 const UserProfile = () => {
-    const { id } = useParams();
-    const { data: users, error, isLoading } = useGetAllUsersQuery();
-  const { data: posts } = useGetPostsQuery();
+  const { id } = useParams();
+  const { currentUser } = useSelector((state) => state.auth);
 
-    console.log(users);
-    const UserData = users?.filter(user => user?.id === id)[0];
-    console.log(UserData);
-    const userPosts = posts?.filter((post) => post.uid === id);
-    // console.log(UserPosts);
-    
-  console.log(id);
+  const { data: users, isLoading: isUsersLoading } = useGetAllUsersQuery();
+  const { data: posts, isLoading: isPostsLoading } = useGetPostsQuery();
+  const [createNotification] = useCreateNotificationMutation();
+
+  const UserData = users?.find((user) => user?.id === id);
+  const userPosts = posts?.filter((post) => post.uid === id);
+
+  const {
+    data: followData,
+    isLoading: isFollowDataLoading,
+    refetch: refetchFollowData,
+  } = useGetUserFollowDataQuery(UserData?.uid);
+  const [followUser, { isLoading: isFollowing }] = useFollowUserMutation();
+  const [unfollowUser, { isLoading: isUnfollowing }] =
+    useUnfollowUserMutation();
+
+  const isFollowingUser = followData?.followers?.includes(currentUser?.uid);
+
+  const handleFollowToggle = async () => {
+    if (isFollowingUser) {
+      await unfollowUser({
+        currentUserID: currentUser?.uid,
+        targetUserID: UserData?.uid,
+      });
+    } else {
+      await followUser({
+        currentUserID: currentUser?.uid,
+        targetUserID: UserData?.uid,
+      });
+      await createNotification({
+        toUserId: UserData?.uid,
+        fromUserId: currentUser?.uid,
+        type: "follow",
+      });
+    }
+    refetchFollowData(); // Refetch follow data after the operation
+  };
+
+  if (isUsersLoading || isPostsLoading || isFollowDataLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px] ss:pl-[150px] md:px-[20%]">
       <main className="flex-grow w-full">
@@ -39,9 +80,24 @@ const UserProfile = () => {
             </div>
           </div>
 
+          {/* Follow/Unfollow Button */}
+          {currentUser?.uid !== UserData?.uid && (
+            <button
+              onClick={handleFollowToggle}
+              disabled={isFollowing || isUnfollowing}
+              className={`absolute right-12 md:right-[25%] z-40 px-3 py-1 mt-2 border rounded-full text-center font-semibold text-base md:text-lg ${
+                isFollowingUser
+                  ? "bg-red-500 text-white hover:bg-red-600"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
+            >
+              {isFollowingUser ? "Unfollow" : "Follow"}
+            </button>
+          )}
+
           <div className="mt-20 mb-2 px-4">
-            <h1 className="text-2xl font-bold"> {UserData?.displayName}</h1>
-            <p className="text-gray-600">@username</p>
+            <h1 className="text-2xl font-bold">{UserData?.displayName}</h1>
+            <p className="text-gray-600">@{UserData?.username}</p>
             <p className="mt-2">{UserData?.bioText}</p>
             <div className="flex items-center space-x-2 mt-2">
               <span className="text-gray-600">
@@ -51,12 +107,19 @@ const UserProfile = () => {
             </div>
           </div>
 
+          {/* Followers & Following Count */}
           <div className="flex space-x-4 px-4">
             <div>
-              <span className="font-bold">512</span> Following
+              <span className="font-bold">
+                {followData?.following?.length || 0}
+              </span>{" "}
+              Following
             </div>
             <div>
-              <span className="font-bold">2.3K</span> Followers
+              <span className="font-bold">
+                {followData?.followers?.length || 0}
+              </span>{" "}
+              Followers
             </div>
           </div>
 
