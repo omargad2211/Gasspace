@@ -5,6 +5,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firbase";
+import { useGetNotificationsQuery } from "../redux/notificationsApi";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const Sidebar = () => {
       console.error("Logout Error: ", error);
     }
   };
+  // const { data: notifications } = useGetNotificationsQuery(currentUser?.uid);
+  // const unreadCount = notifications?.filter((notif) => !notif.seen).length || 0;
 
   const navigation = [
     {
@@ -25,8 +28,8 @@ const Sidebar = () => {
       icon: <AiOutlineHome />,
     },
     {
-      title: "Friends",
-      path: "friends",
+      title: "notifications",
+      path: "notifications",
       icon: <FaPeoplePulling />,
     },
     {
