@@ -1,11 +1,13 @@
-
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useGetNotificationsQuery, useMarkAsSeenMutation } from "../../redux/notificationsApi";
+import {
+  useGetNotificationsQuery,
+  useMarkAsSeenMutation,
+} from "../../redux/notificationsApi";
 
 const Notifications = () => {
   const { currentUser } = useSelector((state) => state.auth);
-  const { data: notifications, isLoading } = useGetNotificationsQuery(
+  const { data: notifications = [], isLoading } = useGetNotificationsQuery(
     currentUser?.uid
   );
   const [markAsSeen] = useMarkAsSeenMutation();
@@ -15,9 +17,9 @@ const Notifications = () => {
   const handleMarkAsSeen = async (notifId) => {
     await markAsSeen({ userId: currentUser.uid, notificationId: notifId });
   };
-
+  console.log(notifications);
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 w-96">
+    <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px] ss:pl-[150px] md:px-[20%]">
       <h2 className="text-lg font-bold mb-2">Notifications</h2>
       {notifications?.length === 0 ? (
         <p className="text-gray-500">No new notifications</p>

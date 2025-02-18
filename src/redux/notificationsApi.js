@@ -22,8 +22,8 @@ export const notificationsApi = createApi({
       async queryFn(userId) {
         try {
           const q = query(
-            collection(db, "notifications", userId, "userNotifications"),
-            orderBy("timestamp", "desc")
+            collection(db, "notifications"),
+            where("toUserId", "==", userId) // Remove orderBy for testing
           );
           const querySnapshot = await getDocs(q);
           const notifications = querySnapshot.docs.map((doc) => ({
@@ -65,15 +65,9 @@ export const notificationsApi = createApi({
 
     // Mark notification as seen
     markAsSeen: builder.mutation({
-      async queryFn({ userId, notificationId }) {
+      async queryFn({ notificationId }) {
         try {
-          const notifRef = doc(
-            db,
-            "notifications",
-            userId,
-            "userNotifications",
-            notificationId
-          );
+          const notifRef = doc(db, "notifications", notificationId);
           await updateDoc(notifRef, { seen: true });
 
           return { data: "Notification Seen" };
@@ -81,9 +75,7 @@ export const notificationsApi = createApi({
           return { error: error.message };
         }
       },
-      invalidatesTags: (result, error, { userId }) => [
-        { type: "Notifications", id: userId },
-      ],
+      invalidatesTags: [{ type: "Notifications" }],
     }),
   }),
 });
