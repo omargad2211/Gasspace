@@ -36,20 +36,39 @@ const Notifications = () => {
                 <span>
                   <Link
                     to={`/profile/${notif.fromUserId}`}
-                    className="font-bold"
+                    className="font-bold flex justify-start items-center gap-1"
                   >
+                    <img
+                      src={
+                        notif?.photoURL || "images/User-Profile-PNG-Clipart.png"
+                      }
+                      alt="profile"
+                      className="size-8 rounded-full"
+                    />
+                    <p className=" text-nowrap">
+                      {notif?.displayName || "User Name"}
+                    </p>
                     {notif.fromUserId}
                   </Link>{" "}
                   followed you.
                 </span>
               )}
               {notif.type === "like" && (
-                <span>
+                <span className=" flex justify-start items-center gap-2 md:gap-4">
                   <Link
                     to={`/profile/${notif.fromUserId}`}
-                    className="font-bold"
+                    className="font-bold flex justify-start items-center gap-1"
                   >
-                    {notif.fromUserId}
+                    <img
+                      src={
+                        notif?.photoURL || "images/User-Profile-PNG-Clipart.png"
+                      }
+                      alt="profile"
+                      className="size-8 rounded-full"
+                    />
+                    <p className=" text-nowrap">
+                      {notif?.displayName || "User Name"}
+                    </p>
                   </Link>{" "}
                   liked your{" "}
                   <Link to={`/post/${notif.postId}`} className="text-blue-500">
@@ -59,12 +78,22 @@ const Notifications = () => {
                 </span>
               )}
               {notif.type === "comment" && (
-                <span>
+                <span className=" flex justify-start items-center gap-2 md:gap-4">
                   <Link
                     to={`/profile/${notif.fromUserId}`}
-                    className="font-bold"
+                    className="font-bold flex justify-start items-center gap-1"
                   >
-                    {notif.fromUserId}
+                    <img
+                      src={
+                        notif?.photoURL || "images/User-Profile-PNG-Clipart.png"
+                      }
+                      alt="profile"
+                      className="size-8 rounded-full"
+                    />
+                    <p className="">
+                      {notif?.displayName || "User Name"}
+                    </p>{" "}
+             
                   </Link>{" "}
                   commented on your{" "}
                   <Link to={`/post/${notif.postId}`} className="text-blue-500">
@@ -74,12 +103,21 @@ const Notifications = () => {
                 </span>
               )}
               {notif.type === "repost" && (
-                <span>
+                <span className=" flex justify-start items-center gap-2 md:gap-4">
                   <Link
                     to={`/profile/${notif.fromUserId}`}
-                    className="font-bold"
+                    className="font-bold flex justify-start items-center gap-1"
                   >
-                    {notif.fromUserId}
+                    <img
+                      src={
+                        notif?.photoURL || "images/User-Profile-PNG-Clipart.png"
+                      }
+                      alt="profile"
+                      className="size-8 rounded-full"
+                    />
+                    <p className=" text-nowrap">
+                      {notif?.displayName || "User Name"}
+                    </p>
                   </Link>{" "}
                   reposted your{" "}
                   <Link to={`/post/${notif.postId}`} className="text-blue-500">
