@@ -43,7 +43,14 @@ export const notificationsApi = createApi({
 
     // Create a new notification
     createNotification: builder.mutation({
-      async queryFn({ toUserId, fromUserId, type, postId = null }) {
+      async queryFn({
+        toUserId,
+        fromUserId,
+        type,
+        postId = null,
+        photoURL,
+        displayName,
+      }) {
         try {
           const notifRef = doc(collection(db, "notifications")); // Store in a single collection
           await setDoc(notifRef, {
@@ -53,6 +60,8 @@ export const notificationsApi = createApi({
             postId,
             timestamp: Timestamp.now(), // Use Firebase timestamp
             seen: false,
+            photoURL,
+            displayName,
           });
 
           return { data: "Notification Sent" };
