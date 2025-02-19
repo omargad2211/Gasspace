@@ -13,6 +13,7 @@ import {
   useGetUserRepostedPostsQuery,
 } from "../../redux/repostsApi";
 import { BiRepost } from "react-icons/bi";
+import { useGetUserFollowDataQuery } from "../../redux/followersApi";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.auth);
@@ -53,6 +54,12 @@ const Profile = () => {
     currentUser?.headerImage || ""
   );
 
+      const {
+        data: followData,
+        isLoading: isFollowDataLoading,
+        refetch: refetchFollowData,
+      } = useGetUserFollowDataQuery(currentUser?.uid);
+    
   useEffect(() => {
     if (currentUser) {
       reset({
@@ -223,10 +230,15 @@ const allPosts = [
 
           <div className="flex space-x-4 px-4">
             <div>
-              <span className="font-bold">512</span> Following
+              <span className="font-bold">
+                {" "}
+                {followData?.following?.length || 0}
+              </span>{" "}
+              Following
             </div>
             <div>
-              <span className="font-bold">2.3K</span> Followers
+              {followData?.followers?.length || 0}
+              <span className="font-bold"></span> Followers
             </div>
           </div>
 
