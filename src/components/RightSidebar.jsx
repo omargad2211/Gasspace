@@ -6,9 +6,13 @@ import { useSelector } from "react-redux";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/firbase";
 import { useGetNotificationsQuery } from "../redux/notificationsApi";
+import { useGetUserFollowDataQuery } from "../redux/followersApi";
+import { useGetAllRepostsQuery } from "../redux/repostsApi";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.auth);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -18,6 +22,18 @@ const Sidebar = () => {
       console.error("Logout Error: ", error);
     }
   };
+
+  const {
+    data: followData,
+    isLoading: isFollowDataLoading,
+    refetch: refetchFollowData,
+  } = useGetUserFollowDataQuery(currentUser?.uid);
+
+  const { data: reposts, error } = useGetAllRepostsQuery();
+  const userReposts = reposts?.filter(
+    (repost) => repost.userID === currentUser?.uid
+  );
+
   // const { data: notifications } = useGetNotificationsQuery(currentUser?.uid);
   // const unreadCount = notifications?.filter((notif) => !notif.seen).length || 0;
 
@@ -39,8 +55,6 @@ const Sidebar = () => {
     },
   ];
 
-  const { currentUser } = useSelector((state) => state.auth);
-
   return (
     <div className="bg-primary fixed left-0 top-20 md:top-24 flex flex-col justify-start items-start gap-4 px-2 h-screen w-1/5">
       {currentUser && (
@@ -48,8 +62,7 @@ const Sidebar = () => {
           <div className="flex justify-start items-center gap-2">
             <img
               src={
-                currentUser?.photoURL ||
-                "images/User-Profile-PNG-Clipart.png"
+                currentUser?.photoURL || "images/User-Profile-PNG-Clipart.png"
               }
               alt="profile"
               className="size-8 rounded-full"
@@ -64,15 +77,15 @@ const Sidebar = () => {
           </div>
           <div className="flex justify-between items-center gap-1 pt-4 flex-wrap text-sm">
             <div className="text-center">
-              <p>2.3K</p>
+              <p> {followData?.followers?.length || 0}</p>
               <p className="text-xs">followers</p>
             </div>
             <div className="text-center">
-              <p>2.3K</p>
+              <p> {followData?.following?.length || 0}</p>
               <p className="text-xs">following</p>
             </div>
             <div className="text-center">
-              <p>23</p>
+              <p>{userReposts?.length}</p>
               <p className="text-xs">posts</p>
             </div>
           </div>
