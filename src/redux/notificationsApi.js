@@ -23,13 +23,19 @@ export const notificationsApi = createApi({
         try {
           const q = query(
             collection(db, "notifications"),
-            where("toUserId", "==", userId) // Remove orderBy for testing
+            where("toUserId", "==", userId)
           );
           const querySnapshot = await getDocs(q);
-          const notifications = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const notifications = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              ...data,
+              timestamp: doc.data().timestamp
+                ? doc.data().timestamp.toMillis()
+                : null,
+            };
+          });
 
           return { data: notifications };
         } catch (error) {
