@@ -15,10 +15,10 @@ const PublicLayout = () => {
         <Sidebar />
 
         {/* Main Content Area */}
-       
-          <Outlet />
-     
-        <LeftSidebar/>
+
+        <Outlet />
+
+        <LeftSidebar />
       </div>
     </div>
   );

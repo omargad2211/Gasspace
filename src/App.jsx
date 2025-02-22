@@ -10,6 +10,7 @@ import Login from "./pages/register/login";
 import UserProfile from "./pages/users";
 import Notifications from "./pages/notifications";
 import PostPage from "./pages/post";
+import ProtectedLayout from "./Layouts/ProtectedLayout";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,8 +25,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/notifications" element={<Notifications />} />
+          <Route element={<ProtectedLayout />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/notifications" element={<Notifications />} />
+          </Route>
+
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route path="/post/:id" element={<PostPage />} />
         </Route>
