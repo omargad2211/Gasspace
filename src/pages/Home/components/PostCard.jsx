@@ -28,13 +28,19 @@ import {
 } from "../../../redux/repostsApi"; // Import repost mutations
 import { useCreateNotificationMutation } from "../../../redux/notificationsApi";
 import { Link } from "react-router-dom";
-import { useDeletePostMutation } from "../../../redux/postsApi";
+import {
+  useDeletePostMutation,
+  useEditPostMutation,
+} from "../../../redux/postsApi";
 
 const PostCard = ({ post }) => {
   // console.log(post);
   const { currentUser } = useSelector((state) => state.auth);
   const [createNotification] = useCreateNotificationMutation();
   const [openModal, setOpenModal] = useState(false);
+
+  const [editMode, setEditMode] = useState(false);
+  const [newPostText, setNewPostText] = useState(post?.post || "");
 
   // Fetch comments
   const { data: comments, isLoading } = useGetCommentsQuery(post?.id);
@@ -137,12 +143,15 @@ const PostCard = ({ post }) => {
     setOpenModal(!openModal);
     // console.log(openModal);
   };
-  // const handleEditPost = async () => {
-  //   if (!newPostText.trim()) return;
-  //   await editPost({ postId: post.id, updatedData: { post: newPostText } });
-  //   setEditMode(false);
-  //   toggleModal();
-  // };
+
+  const [editPost] = useEditPostMutation();
+
+  const handleEditPost = async () => {
+    if (!newPostText.trim()) return;
+    await editPost({ postId: post.id, updatedData: { post: newPostText } });
+    setEditMode(false);
+    toggleModal();
+  };
 
   const [deletePost] = useDeletePostMutation();
 
@@ -183,10 +192,16 @@ const PostCard = ({ post }) => {
       {/* edit modal  */}
       {openModal && (
         <div className="absolute top-6 right-2 bg-white rounded-lg shadow-md shadow-gray-300 p-2 flex flex-col gap-2 hover:bg- ">
-          <div className="flex items-center justify-start gap-1 text-blue-800 hover:bg-[#D9F8FF] p-1 rounded-lg">
+          {/* <button
+            onClick={() => {
+              setEditMode(true);
+              toggleModal();
+            }}
+            className="flex items-center justify-start gap-1 text-blue-800 hover:bg-[#D9F8FF] p-1 rounded-lg"
+          >
             <VscEdit />
-            <button>edit</button>
-          </div>
+            <span>edit</span>
+          </button> */}
           <button
             onClick={handleDeletePost}
             className="flex items-center justify-start gap-1 text-red-800 hover:bg-[#ffd9d9] p-1 rounded-lg"
@@ -199,7 +214,9 @@ const PostCard = ({ post }) => {
 
       {/* Post Content */}
       <Link to={`/post/${post?.id}`}>
-        <p className="text-gray-500 pt-3 text-sm px-4">{post?.post}</p>
+        <p className="text-gray-800 font-semibold pt-3 text-sm px-4">
+          {post?.post}
+        </p>
         {post?.img || post?.image ? (
           <img
             src={post?.img || post?.image}
