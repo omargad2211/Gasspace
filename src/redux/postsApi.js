@@ -3,6 +3,9 @@ import {
   collection,
   getDocs,
   addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
   onSnapshot,
   serverTimestamp,
 } from "firebase/firestore";
@@ -58,9 +61,36 @@ export const postsApi = createApi({
         try {
           await addDoc(collection(db, "posts"), {
             ...postData,
-            timestamp: serverTimestamp(), // Firestore server timestamp
+            timestamp: serverTimestamp(),
           });
           return { data: "Post added successfully" };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
+    }),
+
+    editPost: builder.mutation({
+      async queryFn({ postId, updatedData }) {
+        try {
+          const postRef = doc(db, "posts", postId);
+          await updateDoc(postRef, {
+            ...updatedData,
+            timestamp: serverTimestamp(),
+          });
+          return { data: "Post updated successfully" };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
+    }),
+
+    deletePost: builder.mutation({
+      async queryFn(postId) {
+        try {
+          const postRef = doc(db, "posts", postId);
+          await deleteDoc(postRef);
+          return { data: "Post deleted successfully" };
         } catch (error) {
           return { error: error.message };
         }
@@ -69,4 +99,9 @@ export const postsApi = createApi({
   }),
 });
 
-export const { useGetPostsQuery, useAddPostMutation } = postsApi;
+export const {
+  useGetPostsQuery,
+  useAddPostMutation,
+  useEditPostMutation,
+  useDeletePostMutation,
+} = postsApi;
