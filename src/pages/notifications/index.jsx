@@ -4,6 +4,7 @@ import {
   useGetNotificationsQuery,
   useMarkAsSeenMutation,
 } from "../../redux/notificationsApi";
+import { formatTimestamp } from "../../Helpers/formatTimestamp";
 
 const Notifications = () => {
   const navigate = useNavigate();
@@ -14,6 +15,11 @@ const Notifications = () => {
   const [markAsSeen] = useMarkAsSeenMutation();
 
   if (isLoading) return <div>Loading...</div>;
+
+  // Sort notifications by timestamp (newest first)
+  const sortedNotifications = [...notifications].sort(
+    (a, b) => b.timestamp - a.timestamp
+  );
 
   const handleMarkAsSeen = async (notifId) => {
     await markAsSeen({ userId: currentUser.uid, notificationId: notifId });
@@ -27,10 +33,10 @@ const Notifications = () => {
   return (
     <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px] ss:pl-[150px] md:px-[20%]">
       <h2 className="text-lg font-bold mb-2">Notifications</h2>
-      {notifications?.length === 0 ? (
+      {sortedNotifications.length === 0 ? (
         <p className="text-gray-500">No new notifications</p>
       ) : (
-        notifications?.map((notif) => (
+        sortedNotifications.map((notif) => (
           <div
             key={notif.id}
             className={`p-2 border-b ${
@@ -90,11 +96,15 @@ const Notifications = () => {
                 {notif.type === "repost" && <span>reposted your post.</span>}
               </button>
             )}
+            <p className="text-gray-500 text-xs md:py-1 px-8 text-[9px] xs:text-[13px] md:text-lg ">
+              {formatTimestamp(notif?.timestamp)}
+            </p>
           </div>
         ))
       )}
     </div>
   );
 };
+
 
 export default Notifications;

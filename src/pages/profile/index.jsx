@@ -245,16 +245,16 @@ const allPosts = [
           <div className="border-b my-4">
             <ul className="flex justify-around text-center text-sm font-medium">
               <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                <span>Tweets</span>
+                <span>Posts</span>
               </li>
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
+              {/* <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
                 <span>Tweets & Replies</span>
-              </li>
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                <span>Media</span>
-              </li>
+              </li> */}
               <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
                 <span>Likes</span>
+              </li>
+              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
+                <span>Saves</span>
               </li>
             </ul>
           </div>
