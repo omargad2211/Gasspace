@@ -59,7 +59,9 @@ const Sidebar = () => {
     <div className="bg-primary fixed left-0 top-20 md:top-24 flex flex-col justify-start items-start gap-4 px-2 h-screen w-1/5">
       {currentUser && (
         <div className="hidden md:block bg-white p-4 rounded-lg  w-full">
-          <div className="flex justify-start items-center gap-2">
+          <Link
+            to={'/profile'}
+            className="flex justify-start items-center gap-2">
             <img
               src={
                 currentUser?.photoURL || "images/User-Profile-PNG-Clipart.png"
@@ -74,7 +76,7 @@ const Sidebar = () => {
               </p>
               <p className="text-gray-500 text-xs">@username</p>
             </div>
-          </div>
+          </Link>
           <div className="flex justify-between items-center gap-1 pt-4 flex-wrap text-sm">
             <div className="text-center">
               <p> {followData?.followers?.length || 0}</p>
