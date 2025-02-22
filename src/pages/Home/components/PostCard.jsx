@@ -2,6 +2,10 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa6";
 import { RiShareForwardLine } from "react-icons/ri";
 import { BiRepost } from "react-icons/bi";
+import { PiDotsSix } from "react-icons/pi";
+import { VscEdit } from "react-icons/vsc";
+import { MdDeleteOutline } from "react-icons/md";
+
 import { formatTimestamp } from "../../../Helpers/formatTimestamp";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,14 +28,17 @@ import {
 } from "../../../redux/repostsApi"; // Import repost mutations
 import { useCreateNotificationMutation } from "../../../redux/notificationsApi";
 import { Link } from "react-router-dom";
+import { useDeletePostMutation } from "../../../redux/postsApi";
 
 const PostCard = ({ post }) => {
-  // console.log(post.id);
+  // console.log(post);
   const { currentUser } = useSelector((state) => state.auth);
   const [createNotification] = useCreateNotificationMutation();
+  const [openModal, setOpenModal] = useState(false);
 
   // Fetch comments
   const { data: comments, isLoading } = useGetCommentsQuery(post?.id);
+  // console.log(comments);
   const [addComment] = useAddCommentMutation();
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
@@ -123,22 +130,72 @@ const PostCard = ({ post }) => {
     }
   };
 
+  const originalPoster = post.uid === currentUser.uid;
+  // console.log(originalPoster);
+
+  const toggleModal = () => {
+    setOpenModal(!openModal);
+    // console.log(openModal);
+  };
+  // const handleEditPost = async () => {
+  //   if (!newPostText.trim()) return;
+  //   await editPost({ postId: post.id, updatedData: { post: newPostText } });
+  //   setEditMode(false);
+  //   toggleModal();
+  // };
+
+  const [deletePost] = useDeletePostMutation();
+
+  const handleDeletePost = async () => {
+    await deletePost(post.id);
+  };
+
   return (
-    <div className="bg-white p-2 mt-2 shadow-md rounded-lg">
+    <div className="bg-white p-2 mt-2 shadow-md rounded-lg relative ">
       {/* Post Header */}
-      <div className="flex justify-start items-center gap-2">
-        <img
-          src={post?.photoURL}
-          alt="profile"
-          className="size-8 rounded-full"
-        />
-        <div className="flex flex-col">
-          <p className="text-black text-sm font-semibold">{post?.displayName}</p>
-          <p className="text-gray-500 text-xs">
-            {formatTimestamp(post?.timestamp)}
-          </p>
-        </div>
+      <div className="flex items-start justify-between">
+        <Link
+          to={`/profile/${post?.uid}`}
+          className="flex justify-start items-center gap-2"
+        >
+          <img
+            src={post?.photoURL}
+            alt="profile"
+            className="size-8 rounded-full"
+          />
+          <div className="flex flex-col">
+            <p className="text-black text-sm font-semibold">
+              {post?.displayName}
+            </p>
+            <p className="text-gray-500 text-xs">
+              {formatTimestamp(post?.timestamp)}
+            </p>
+          </div>
+        </Link>
+
+        {/* post edit  */}
+        {originalPoster && (
+          <button onClick={toggleModal}>
+            <PiDotsSix />
+          </button>
+        )}
       </div>
+      {/* edit modal  */}
+      {openModal && (
+        <div className="absolute top-6 right-2 bg-white rounded-lg shadow-md shadow-gray-300 p-2 flex flex-col gap-2 hover:bg- ">
+          <div className="flex items-center justify-start gap-1 text-blue-800 hover:bg-[#D9F8FF] p-1 rounded-lg">
+            <VscEdit />
+            <button>edit</button>
+          </div>
+          <button
+            onClick={handleDeletePost}
+            className="flex items-center justify-start gap-1 text-red-800 hover:bg-[#ffd9d9] p-1 rounded-lg"
+          >
+            <MdDeleteOutline />
+            <span>delete</span>
+          </button>
+        </div>
+      )}
 
       {/* Post Content */}
       <Link to={`/post/${post?.id}`}>
@@ -207,7 +264,15 @@ const PostCard = ({ post }) => {
                   alt="user"
                   className="size-6 rounded-full"
                 />
-                <p>{like.displayName}</p>
+                <div>
+                  <p className="font-semibold text-gray-700">
+                    {" "}
+                    {like.displayName}
+                  </p>
+                  <p className="text-gray-500 text-xs">
+                    {formatTimestamp(like?.timestamp)}
+                  </p>
+                </div>
               </li>
             ))}
           </ul>
@@ -227,7 +292,7 @@ const PostCard = ({ post }) => {
                   key={comment.id}
                   className="border-b py-2 text-sm flex flex-col items-start gap-2 "
                 >
-                  <div className="flex items-end gap-1">
+                  <div className="flex items-center gap-2">
                     <img
                       src={
                         comment?.photoURL ||
@@ -236,9 +301,12 @@ const PostCard = ({ post }) => {
                       alt="profile"
                       className="size-8 rounded-full"
                     />
-                    <p className="text-xs md:text-base font-semibold text-gray-600 text-nowrap">
-                      {comment?.displayName}
-                    </p>
+                    <div className="text-xs md:text-base font-semibold text-gray-600 text-nowrap">
+                      <p>{comment?.displayName}</p>
+                      <p className="text-gray-500 text-xs font-normal">
+                        {formatTimestamp(comment?.timestamp)}
+                      </p>
+                    </div>
                   </div>
                   <p className="px-8">{comment.comment}</p>
                 </li>
