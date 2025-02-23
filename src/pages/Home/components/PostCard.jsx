@@ -192,7 +192,7 @@ const PostCard = ({ post }) => {
       {/* edit modal  */}
       {openModal && (
         <div className="absolute top-6 right-2 bg-white rounded-lg shadow-md shadow-gray-300 p-2 flex flex-col gap-2 hover:bg- ">
-          {/* <button
+          <button
             onClick={() => {
               setEditMode(true);
               toggleModal();
@@ -201,7 +201,7 @@ const PostCard = ({ post }) => {
           >
             <VscEdit />
             <span>edit</span>
-          </button> */}
+          </button>
           <button
             onClick={handleDeletePost}
             className="flex items-center justify-start gap-1 text-red-800 hover:bg-[#ffd9d9] p-1 rounded-lg"
@@ -211,20 +211,44 @@ const PostCard = ({ post }) => {
           </button>
         </div>
       )}
-
-      {/* Post Content */}
-      <Link to={`/post/${post?.id}`}>
-        <p className="text-gray-800 font-semibold pt-3 text-sm px-4">
-          {post?.post}
-        </p>
-        {post?.img || post?.image ? (
-          <img
-            src={post?.img || post?.image}
-            alt="Post content"
-            className="w-full rounded-lg mt-4"
+      {editMode && (
+        <div className="p-2">
+          <textarea
+            value={newPostText}
+            onChange={(e) => setNewPostText(e.target.value)}
+            className="border p-2 rounded w-full"
           />
-        ) : null}
-      </Link>
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={handleEditPost}
+              className="bg-[#D9F8FF] hover:bg-[#b9f2ff] text-blue-800 px-8 py-1 rounded-lg"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => setEditMode(false)}
+              className="bg-gray-400/80 hover:bg-gray-400 text-white px-8 py-1 rounded-lg"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Post Content */}
+      {!editMode && (
+        <Link to={`/post/${post?.id}`}>
+          <p className="text-gray-800 font-semibold pt-3 text-sm px-4">
+            {post?.post}
+          </p>
+          {post?.img || post?.image ? (
+            <img
+              src={post?.img || post?.image}
+              alt="Post content"
+              className="w-full rounded-lg mt-4"
+            />
+          ) : null}
+        </Link>
+      )}
       {/* Post Actions */}
       <div className="w-full border-t mt-3 p-2 text-gray-500 flex justify-between items-center gap-4 text-sm md:text-base">
         <div className="flex justify-start items-center gap-4">
