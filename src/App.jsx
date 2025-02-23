@@ -14,6 +14,8 @@ import ProtectedLayout from "./Layouts/ProtectedLayout";
 import AllPosts from "./pages/profile/components/AllPosts";
 import AllLikes from "./pages/profile/components/AllLikes";
 import SavedPosts from "./pages/profile/components/SavedPosts";
+import UserPosts from "./pages/users/components/UserPosts";
+import UserLikes from "./pages/users/components/UserLikes";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,7 +40,11 @@ function App() {
             <Route path="/notifications" element={<Notifications />} />
           </Route>
 
-          <Route path="/profile/:id" element={<UserProfile />} />
+          <Route path="/profile/:id" element={<UserProfile />}>
+            <Route index element={<Navigate to="posts" replace />} />
+            <Route path="posts" element={<UserPosts />} />
+            <Route path="likes" element={<UserLikes />} />
+          </Route>
           <Route path="/post/:id" element={<PostPage />} />
         </Route>
       </Routes>

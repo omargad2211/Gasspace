@@ -1,6 +1,6 @@
 import { FaEdit } from "react-icons/fa";
 import PostCard from "../Home/components/PostCard";
-import { useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import { useGetAllUsersQuery } from "../../redux/authApi";
 import { useGetPostsQuery } from "../../redux/postsApi";
 import {
@@ -16,11 +16,9 @@ const UserProfile = () => {
   const { currentUser } = useSelector((state) => state.auth);
 
   const { data: users, isLoading: isUsersLoading } = useGetAllUsersQuery();
-  const { data: posts, isLoading: isPostsLoading } = useGetPostsQuery();
   const [createNotification] = useCreateNotificationMutation();
 
   const UserData = users?.find((user) => user?.id === id);
-  const userPosts = posts?.filter((post) => post.uid === id);
 
   const {
     data: followData,
@@ -53,7 +51,7 @@ const UserProfile = () => {
     refetchFollowData(); // Refetch follow data after the operation
   };
 
-  if (isUsersLoading || isPostsLoading || isFollowDataLoading) {
+  if (isUsersLoading || isFollowDataLoading) {
     return <div>Loading...</div>;
   }
 
@@ -125,29 +123,23 @@ const UserProfile = () => {
 
           <div className="border-b my-4">
             <ul className="flex justify-around text-center text-sm font-medium">
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                Tweets
-              </li>
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                Tweets & Replies
-              </li>
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                Media
-              </li>
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
+              <NavLink
+                to={`/profile/${UserData?.uid}/posts`}
+                className="flex-1 hover:bg-gray-200 cursor-pointer p-2"
+              >
+                Posts
+              </NavLink>
+              <NavLink
+                to={`/profile/${UserData?.uid}/likes`}
+                className="flex-1 hover:bg-gray-200 cursor-pointer p-2"
+              >
                 Likes
-              </li>
+              </NavLink>
             </ul>
           </div>
 
           {/* User Posts */}
-          <div className="space-y-4">
-            {userPosts?.length === 0 ? (
-              <p className="text-center text-gray-500">No posts yet.</p>
-            ) : (
-              userPosts?.map((post) => <PostCard key={post.id} post={post} />)
-            )}
-          </div>
+          <Outlet />
         </section>
       </main>
     </div>
