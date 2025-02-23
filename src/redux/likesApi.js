@@ -104,8 +104,30 @@ export const likesApi = createApi({
         }
       },
     }),
+     getUserLikes: builder.query({
+      async queryFn(userID) {
+        try {
+          const likesCollection = collection(db, "likes");
+          const likesQuery = query(
+            likesCollection,
+            where("userID", "==", userID)
+          );
+          const likesSnapshot = await getDocs(likesQuery);
+          const likesList = likesSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            timestamp: doc.data().timestamp
+              ? doc.data().timestamp.toMillis()
+              : null,
+          }));
+          return { data: likesList };
+        } catch (error) {
+          return { error: error.message };
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetLikesQuery, useAddLikeMutation, useRemoveLikeMutation } =
+export const { useGetLikesQuery, useAddLikeMutation, useRemoveLikeMutation, useGetUserLikesQuery } =
   likesApi;
