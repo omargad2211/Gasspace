@@ -16,7 +16,7 @@ const Sidebar = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      console.log("User logged out");
+      // console.log("User logged out");
       navigate("/register");
     } catch (error) {
       console.error("Logout Error: ", error);

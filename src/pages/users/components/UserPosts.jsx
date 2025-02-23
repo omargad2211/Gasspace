@@ -17,7 +17,7 @@ const UserPosts = () => {
   const { data: reposts, error } = useGetAllRepostsQuery();
   const userReposts = reposts?.filter((repost) => repost.userID === id);
 
-  console.log(userPosts);
+//   console.log(userPosts);
 
   const repostPostIDs = userReposts?.map((repost) => repost.postID);
 
@@ -31,7 +31,7 @@ const UserPosts = () => {
     ...(Array.isArray(userPosts) ? userPosts : []),
     ...(Array.isArray(userRepostedPosts) ? userRepostedPosts : []),
   ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  console.log(allPosts);
+//   console.log(allPosts);
   return (
     <div className="space-y-4 ">
       {/* Display all posts mixed with reposts */}

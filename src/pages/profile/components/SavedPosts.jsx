@@ -5,7 +5,7 @@ import PostCard from "../../Home/components/PostCard";
 const SavedPosts = () => {
   const savedPosts = useSelector((state) => state.saved.items);
   const dispatch = useDispatch();
-  console.log(savedPosts);
+//   console.log(savedPosts);
   return (
     <div className="space-y-4">
       {savedPosts.length === 0 ? (
