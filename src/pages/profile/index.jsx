@@ -8,36 +8,22 @@ import { useGetPostsQuery } from "../../redux/postsApi";
 import PostCard from "../Home/components/PostCard";
 import { formatMonthYear } from "../../Helpers/formatDate";
 import {
-    useGetAllRepostsQuery,
+  useGetAllRepostsQuery,
   useGetRepostsQuery,
   useGetUserRepostedPostsQuery,
 } from "../../redux/repostsApi";
 import { BiRepost } from "react-icons/bi";
 import { useGetUserFollowDataQuery } from "../../redux/followersApi";
+import { NavLink, Outlet } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+
   const [isEditing, setIsEditing] = useState(false);
-  const { data: posts } = useGetPostsQuery();
-  const userPosts = posts?.filter((post) => post?.uid === currentUser?.uid);
 
-  const { data: reposts, error } = useGetAllRepostsQuery();
-  const userReposts = reposts?.filter(
-    (repost) => repost.userID === currentUser?.uid
-  );
-
-//   console.log(userReposts);
-
-  const repostPostIDs = userReposts?.map((repost) => repost.postID);
-
-  // Filter posts that match the repostPostIDs
-  const userRepostedPosts = posts?.filter((post) =>
-    repostPostIDs?.includes(post.id)
-  );
-
-//   console.log(userRepostedPosts);
+  //   console.log(userRepostedPosts);
 
   const {
     register,
@@ -54,12 +40,12 @@ const Profile = () => {
     currentUser?.headerImage || ""
   );
 
-      const {
-        data: followData,
-        isLoading: isFollowDataLoading,
-        refetch: refetchFollowData,
-      } = useGetUserFollowDataQuery(currentUser?.uid);
-    
+  const {
+    data: followData,
+    isLoading: isFollowDataLoading,
+    refetch: refetchFollowData,
+  } = useGetUserFollowDataQuery(currentUser?.uid);
+
   useEffect(() => {
     if (currentUser) {
       reset({
@@ -98,13 +84,7 @@ const Profile = () => {
       dispatch(updateUser(result.data));
       setIsEditing(false);
     }
-    };
-    
-  // Combine and sort posts
-const allPosts = [
-  ...(Array.isArray(userPosts) ? userPosts : []),
-  ...(Array.isArray(userRepostedPosts) ? userRepostedPosts : []),
-].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  };
 
   return (
     <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px] ss:pl-[150px] md:px-[20%]">
@@ -244,41 +224,21 @@ const allPosts = [
 
           <div className="border-b my-4">
             <ul className="flex justify-around text-center text-sm font-medium">
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                <span>Posts</span>
+              <li className="flex-1 hover:bg-[#16171941] cursor-pointer p-2">
+                <NavLink to={"/profile/posts"}>Posts</NavLink>
               </li>
-              {/* <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
+              {/* <li className="flex-1 hover:bg-[ #16171941] cursor-pointer p-2">
                 <span>Tweets & Replies</span>
               </li> */}
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                <span>Likes</span>
+              <li className="flex-1 hover:bg-[#16171941] cursor-pointer p-2">
+                <NavLink to={"/profile/likes"}>Likes</NavLink>
               </li>
-              <li className="flex-1 hover:bg-gray-200 cursor-pointer p-2">
-                <span>Saves</span>
+              <li className="flex-1 hover:bg-[#16171941] cursor-pointer p-2">
+                <NavLink to={"/profile/saves"}>Saves</NavLink>
               </li>
             </ul>
           </div>
-
-          <div className="space-y-4">
-            {/* Display all posts mixed with reposts */}
-            {allPosts?.length === 0 ? (
-              <p className="text-center text-gray-500">No posts yet.</p>
-            ) : (
-              allPosts?.map((post) => (
-                <div key={post.id}>
-                  {/* If it's a reposted post, display a "Reposted" header */}
-                  {userReposts?.some((repost) => repost.postID === post.id) && (
-                    <div className="flex items-center gap-1 ">
-                      <BiRepost className="text-gray-600 text-xl" />
-                      <h4 className="text-sm text-gray-600">You reposted</h4>
-                    </div>
-                  )}
-                  {/* Display the post */}
-                  <PostCard post={post} />
-                </div>
-              ))
-            )}
-          </div>
+          <Outlet />
         </section>
       </main>
     </div>

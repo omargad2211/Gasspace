@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import PublicLayout from "./Layouts/PublicLayout";
 import Home from "./pages/Home";
 import SignUpForm from "./pages/register/SignUp";
@@ -11,6 +11,9 @@ import UserProfile from "./pages/users";
 import Notifications from "./pages/notifications";
 import PostPage from "./pages/post";
 import ProtectedLayout from "./Layouts/ProtectedLayout";
+import AllPosts from "./pages/profile/components/AllPosts";
+import AllLikes from "./pages/profile/components/AllLikes";
+import SavedPosts from "./pages/profile/components/SavedPosts";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,7 +29,12 @@ function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route element={<ProtectedLayout />}>
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<Profile />}>
+              <Route index element={<Navigate to="posts" replace />} />
+              <Route path="posts" element={<AllPosts />} />
+              <Route path="likes" element={<AllLikes />} />
+              <Route path="saves" element={<SavedPosts />} />
+            </Route>
             <Route path="/notifications" element={<Notifications />} />
           </Route>
 
