@@ -5,7 +5,7 @@ import PostCard from "../Home/components/PostCard";
 
 const PostPage = () => {
   const { id } = useParams();
-  console.log(id);
+//   console.log(id);
 
   const { data: posts, isLoading: isPostsLoading } = useGetPostsQuery();
 
@@ -14,7 +14,7 @@ const PostPage = () => {
   }
 
   const postData = posts?.find((post) => post?.id === id);
-  console.log(postData);
+//   console.log(postData);
 
   return (
     <div className="min-h-screen bg-primary px-4 mx-auto pt-24 pl-[100px] ss:pl-[150px] md:px-[20%] pb-4">

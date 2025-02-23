@@ -136,7 +136,7 @@ const PostCard = ({ post }) => {
     }
   };
 
-  const originalPoster = post.uid === currentUser.uid;
+  const originalPoster = post?.uid === currentUser?.uid;
   // console.log(originalPoster);
 
   const toggleModal = () => {

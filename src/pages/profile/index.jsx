@@ -28,7 +28,7 @@ const Profile = () => {
     (repost) => repost.userID === currentUser?.uid
   );
 
-  console.log(userReposts);
+//   console.log(userReposts);
 
   const repostPostIDs = userReposts?.map((repost) => repost.postID);
 
@@ -37,7 +37,7 @@ const Profile = () => {
     repostPostIDs?.includes(post.id)
   );
 
-  console.log(userRepostedPosts);
+//   console.log(userRepostedPosts);
 
   const {
     register,
