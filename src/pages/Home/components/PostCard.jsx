@@ -8,7 +8,7 @@ import { MdDeleteOutline } from "react-icons/md";
 
 import { formatTimestamp } from "../../../Helpers/formatTimestamp";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   useAddCommentMutation,
@@ -32,6 +32,7 @@ import {
   useDeletePostMutation,
   useEditPostMutation,
 } from "../../../redux/postsApi";
+import { addToWishlist, removeFromWishlist } from "../../../redux/savedSlice";
 
 const PostCard = ({ post }) => {
   // console.log(post);
@@ -41,6 +42,7 @@ const PostCard = ({ post }) => {
 
   const [editMode, setEditMode] = useState(false);
   const [newPostText, setNewPostText] = useState(post?.post || "");
+  const dispatch = useDispatch();
 
   // Fetch comments
   const { data: comments, isLoading } = useGetCommentsQuery(post?.id);
@@ -159,6 +161,27 @@ const PostCard = ({ post }) => {
     await deletePost(post.id);
   };
 
+  const saved = useSelector((state) => state.saved.items);
+  const isSelected = saved?.some((item) => item.id === post?.id);
+
+  const handleToggleWishlist = () => {
+    if (isSelected) {
+      dispatch(removeFromWishlist({ id: post?.id }));
+    } else {
+      dispatch(
+        addToWishlist({
+          id: post?.id,
+          uid: post?.uid,
+          photoURL: post?.photoURL,
+          displayName: post?.displayName,
+          image: post?.image,
+          post: post?.post,
+          timestamp: post?.timestamp,
+          isSelected: true,
+        })
+      );
+    }
+  };
   return (
     <div className="bg-white p-2 mt-2 shadow-md rounded-lg relative ">
       {/* Post Header */}
@@ -290,7 +313,13 @@ const PostCard = ({ post }) => {
             <p>{reposts.length} reposts</p>
           </button>
         </div>
-        <FaRegBookmark />
+        {/* saved button  */}
+        <button
+          onClick={() => handleToggleWishlist()}
+          className={`${isSelected ? "text-blue-800" : ""} `}
+        >
+          <FaRegBookmark />
+        </button>
       </div>
 
       {/* Liked Users List */}
