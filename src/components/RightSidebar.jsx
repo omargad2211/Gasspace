@@ -94,7 +94,7 @@ const Sidebar = () => {
         </div>
       )}
 
-      <div className="bg-white h-full md:h-1/2 flex flex-col items-start justify-around px-4 md:px-8 gap-4 md:w-full rounded-lg">
+      <div className="bg-white h-full md:h-1/2 flex flex-col items-start justify-around px-4 md:px-2 gap-4 md:w-full rounded-lg">
         {navigation.map((nav, i) => (
           <NavLink
             key={i}

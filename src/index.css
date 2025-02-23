@@ -5,8 +5,21 @@
 .active {
   color: white;
   position: relative;
-  background-color: #1617194b;
-  padding: 4px;
+  background-color: #16171941;
+  padding-right: 16px;
+  padding-left: 16px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-radius: 8px;
+}
+.profileHover{
+    color: white;
+  position: relative;
+  background-color: #16171941;
+  padding-right: 16px;
+  padding-left: 16px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   border-radius: 8px;
 }
 
