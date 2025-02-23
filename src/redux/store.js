@@ -8,10 +8,12 @@ import { likesApi } from "./likesApi";
 import { repostsApi } from "./repostsApi";
 import { followersApi } from "./followersApi";
 import { notificationsApi } from "./notificationsApi";
+import savedReducer from "./savedSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    saved: savedReducer,
     [postsApi.reducerPath]: postsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [commentsApi.reducerPath]: commentsApi.reducer,
