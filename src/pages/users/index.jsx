@@ -83,10 +83,10 @@ const UserProfile = () => {
             <button
               onClick={handleFollowToggle}
               disabled={isFollowing || isUnfollowing}
-              className={`absolute right-12 md:right-[25%] z-40 px-3 py-1 mt-2 border rounded-full text-center font-semibold text-base md:text-lg ${
+              className={`absolute right-12 md:right-[25%] z-40 px-4 py-1 mt-2 shadow-md rounded-full text-center font-semibold text-base md:text-lg ${
                 isFollowingUser
-                  ? "bg-red-500 text-white hover:bg-red-600"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                  ? "bg-[#ffd9d9] text-red-700 px-4 hover:bg-[#ffa9a9]"
+                  : "bg-[#D9F8FF] text-blue-700 px-4 hover:bg-[#a9efff]"
               }`}
             >
               {isFollowingUser ? "Unfollow" : "Follow"}
