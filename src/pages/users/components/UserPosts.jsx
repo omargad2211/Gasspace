@@ -5,19 +5,24 @@ import { useParams } from "react-router-dom";
 import { useGetAllRepostsQuery } from "../../../redux/repostsApi";
 import { BiRepost } from "react-icons/bi";
 import { useGetAllUsersQuery } from "../../../redux/authApi";
+import PostCardSkeleton from "../../Skeletons/PostCardSkeleton";
 
 const UserPosts = () => {
   const { id } = useParams();
-  const { data: users, isLoading: isUsersLoading } = useGetAllUsersQuery();
+  const { data: users, isLoading } = useGetAllUsersQuery();
   const UserData = users?.find((user) => user?.id === id);
 
   const { data: posts, isLoading: isPostsLoading } = useGetPostsQuery();
   const userPosts = posts?.filter((post) => post.uid === id);
 
-  const { data: reposts, error } = useGetAllRepostsQuery();
+  const {
+    data: reposts,
+    error,
+    isLoading: isrePostsLoading,
+  } = useGetAllRepostsQuery();
   const userReposts = reposts?.filter((repost) => repost.userID === id);
 
-//   console.log(userPosts);
+  //   console.log(userPosts);
 
   const repostPostIDs = userReposts?.map((repost) => repost.postID);
 
@@ -31,7 +36,11 @@ const UserPosts = () => {
     ...(Array.isArray(userPosts) ? userPosts : []),
     ...(Array.isArray(userRepostedPosts) ? userRepostedPosts : []),
   ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-//   console.log(allPosts);
+  //   console.log(allPosts);
+
+  if (isPostsLoading || isrePostsLoading) {
+    return [...Array(4)].map((_, index) => <PostCardSkeleton key={index} />);
+  }
   return (
     <div className="space-y-4 ">
       {/* Display all posts mixed with reposts */}
