@@ -1,88 +1,110 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firbase";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+  const [firebaseError, setFirebaseError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
+    setFirebaseError("");
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, data.email, data.password);
       navigate("/");
     } catch (error) {
-      setError("Invalid email or password");
+      setFirebaseError(error.message);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-8">
-      <div className="flex flex-col md:flex-row items-center max-w-4xl w-full px-6 md:px-0">
-        {/* Left Side - Branding */}
+    <div className="flex min-h-screen items-center justify-center px-8 relative">
+      <img
+        src="\images\background2.webp"
+        alt="background"
+        width={1920}
+        height={1080}
+        className="w-full h-full object-cover fixed blur-[2px]"
+      />
+      <div className="flex flex-col md:flex-row items-center max-w-4xl w-full px-6 md:px-0 relative">
         <div className="text-center md:text-left md:w-1/2 mb-6 md:mb-0">
           <h1 className="text-4xl font-bold text-blue-600">Gasspace</h1>
-          <p className="mt-2 text-lg">Your gate to freedom.</p>
+          <p className="mt-2 text-lg text-white shadow-md">Your gate to freedom.</p>
         </div>
 
-        {/* Right Side - Login Form */}
-        <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
-          <form onSubmit={handleLogin} className="space-y-4">
+        <div className="bg-white/20 shadow-black/10 backdrop-blur-[5px] border border-white/20 p-6 rounded-lg shadow-md w-full">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
               <input
                 type="email"
-                id="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^(?=.*[0-9])(?=.*@).*$/,
+                    message: "Email must contain @ and a number",
+                  },
+                })}
                 placeholder="Email address"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {errors.email && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
+
             <div>
               <input
                 type="password"
-                id="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                    message:
+                      "Password must contain a letter, number, and symbol",
+                  },
+                })}
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {errors.password && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
-            {error && (
-              <div className="text-red-600 text-sm text-center">{error}</div>
+            {firebaseError && (
+              <p className="text-red-600 text-sm text-center">
+                {firebaseError}
+              </p>
             )}
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition"
+              disabled={isSubmitting || errors.email || errors.password}
+              className="w-full bg-[#D9F8FF] text-blue-700 px-4 hover:bg-[#a9efff] font-bold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Log In
+              {isSubmitting ? "Logging in..." : "Log In"}
             </button>
           </form>
 
-          <div className="text-center mt-4">
-            <Link
-              to="/forgot-password"
-              className="text-blue-500 hover:underline"
-            >
-              Forgotten password?
-            </Link>
-          </div>
-
-          <hr className="my-4" />
-
-          <div className="text-center">
+          <div className="text-center pt-8">
             <Link
               to="/register"
-              className="bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition"
+              className="bg-blue-700 text-[#e4faff] font-bold py-3 px-4 rounded-lg hover:bg-blue-800 hover:text-white transition"
             >
               Create New Account
             </Link>

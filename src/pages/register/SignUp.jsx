@@ -12,8 +12,8 @@ const SignUpForm = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid }, // isValid checks if the form has errors
+  } = useForm({ mode: "onChange" }); // Enables real-time validation
   const [signUp, { isLoading }] = useSignUpMutation();
 
   const onSubmit = async (data) => {
@@ -30,9 +30,8 @@ const SignUpForm = () => {
         navigate("/");
       }
     } catch (err) {
-      setError(
-        err?.data?.message || "Error creating account. Please try again."
-      );
+      console.log(err);
+      setError(err || "Error creating account. Please try again.");
     }
   };
 
@@ -104,7 +103,7 @@ const SignUpForm = () => {
             {...register("email", {
               required: "Email is required",
               pattern: {
-                value: /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+.*[0-9]/,
+                value: /^[a-zA-Z0-9]+@/,
                 message: "Email must contain '@' and a number",
               },
             })}
@@ -163,8 +162,12 @@ const SignUpForm = () => {
           <div className="flex flex-col items-center gap-3">
             <button
               type="submit"
-              className="w-full bg-[#D9F8FF] text-blue-700 px-4 hover:bg-[#a9efff] font-bold py-3 rounded-lg transition"
-              disabled={isLoading}
+              className={`w-full text-blue-700 px-4 font-bold py-3 rounded-lg transition ${
+                isLoading || !isValid
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-[#D9F8FF] hover:bg-[#a9efff]"
+              }`}
+              disabled={isLoading || !isValid} // Disable button if loading or form has errors
             >
               {isLoading ? "Signing Up..." : "Sign Up"}
             </button>
