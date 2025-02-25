@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignUpMutation } from "../../redux/authApi";
+import { PiPlusCircleFill } from "react-icons/pi"; // Importing the plus icon
 
 const SignUpForm = () => {
   const [img, setImg] = useState(null);
@@ -29,32 +30,45 @@ const SignUpForm = () => {
         navigate("/");
       }
     } catch (err) {
-      setError("Error creating account. Please try again.");
+      setError(
+        err?.data?.message || "Error creating account. Please try again."
+      );
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">
+    <div className="flex min-h-screen items-center justify-center relative">
+      <img
+        src="/images/background.webp"
+        alt="background"
+        className="w-full h-full object-cover fixed"
+      />
+      <div className="w-full max-w-md bg-white/20 shadow-black/10 backdrop-blur-[5px] border border-white/20 p-6 rounded-lg shadow-md fixed">
+        <h2 className="text-2xl font-bold text-center text-blue-800">
           Sign Up
         </h2>
-        <p className="text-center text-gray-600 text-sm mb-4">
+        <p className="text-center text-white/60 text-sm mb-4">
           It’s quick and easy.
         </p>
 
         {/* Profile Picture */}
-        <div className="flex justify-center mb-4">
-          <label htmlFor="file">
+        <div className="flex justify-center mb-4 relative">
+          <label htmlFor="file" className="relative cursor-pointer">
             <img
               src={
                 img
                   ? URL.createObjectURL(img)
-                  : "images/User-Profile-PNG-Clipart.png"
+                  : "/images/User-Profile-PNG-Clipart.png"
               }
               alt="Profile Preview"
-              className="rounded-full w-16 h-16 cursor-pointer "
+              className="rounded-full w-16 h-16 border"
             />
+            {!img && (
+              <PiPlusCircleFill
+                className="absolute bottom-0 right-0 text-blue-500 bg-white rounded-full"
+                size={24}
+              />
+            )}
           </label>
           <input
             type="file"
@@ -69,9 +83,14 @@ const SignUpForm = () => {
           {/* Full Name */}
           <input
             type="text"
-            {...register("displayName", { required: "Full name is required" })}
+            {...register("displayName", {
+              required: "Full name is required",
+              validate: (value) =>
+                value.trim().split(" ").length >= 2 ||
+                "Enter at least two words",
+            })}
             placeholder="Full Name"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.displayName && (
             <span className="text-red-500 text-sm">
@@ -82,9 +101,15 @@ const SignUpForm = () => {
           {/* Email */}
           <input
             type="email"
-            {...register("email", { required: "Email is required" })}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+.*[0-9]/,
+                message: "Email must contain '@' and a number",
+              },
+            })}
             placeholder="Email address"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.email && (
             <span className="text-red-500 text-sm">{errors.email.message}</span>
@@ -99,9 +124,14 @@ const SignUpForm = () => {
                 value: 6,
                 message: "Password must be at least 6 characters",
               },
+              validate: (value) =>
+                (/[A-Za-z]/.test(value) &&
+                  /\d/.test(value) &&
+                  /[^A-Za-z0-9]/.test(value)) ||
+                "Password must contain a letter, a number, and a symbol",
             })}
             placeholder="New Password"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.password && (
             <span className="text-red-500 text-sm">
@@ -118,7 +148,7 @@ const SignUpForm = () => {
                 value === watch("password") || "Passwords do not match",
             })}
             placeholder="Confirm Password"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.confirmPassword && (
             <span className="text-red-500 text-sm">
@@ -133,7 +163,7 @@ const SignUpForm = () => {
           <div className="flex flex-col items-center gap-3">
             <button
               type="submit"
-              className="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600 transition"
+              className="w-full bg-[#D9F8FF] text-blue-700 px-4 hover:bg-[#a9efff] font-bold py-3 rounded-lg transition"
               disabled={isLoading}
             >
               {isLoading ? "Signing Up..." : "Sign Up"}
