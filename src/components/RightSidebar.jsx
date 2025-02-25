@@ -8,6 +8,7 @@ import { auth } from "../firebase/firbase";
 import { useGetNotificationsQuery } from "../redux/notificationsApi";
 import { useGetUserFollowDataQuery } from "../redux/followersApi";
 import { useGetAllRepostsQuery } from "../redux/repostsApi";
+import { IoIosNotificationsOutline } from "react-icons/io";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const Sidebar = () => {
     {
       title: "notifications",
       path: "notifications",
-      icon: <FaPeoplePulling />,
+      icon: <IoIosNotificationsOutline />,
     },
     {
       title: "Profile",
