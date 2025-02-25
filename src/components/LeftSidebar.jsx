@@ -18,7 +18,7 @@ const LeftSidebar = () => {
               className="flex justify-start items-center gap-2 text-gray-600 hover:bg-[#D9F8FF] px-2 py-1 w-full rounded-xl hover:text-blue-700"
             >
               <img
-                src={user.photoURL}
+                src={user.photoURL || "images/User-Profile-PNG-Clipart.png"}
                 alt="profile"
                 className="size-8 rounded-full"
               />
