@@ -1,34 +1,43 @@
-import React, { useState } from 'react'
-import { useGetPostsQuery } from '../../../redux/postsApi';
-import { useGetAllRepostsQuery } from '../../../redux/repostsApi';
-import { useSelector } from 'react-redux';
-import PostCard from '../../Home/components/PostCard';
-import { BiRepost } from 'react-icons/bi';
+import React, { useState } from "react";
+import { useGetPostsQuery } from "../../../redux/postsApi";
+import { useGetAllRepostsQuery } from "../../../redux/repostsApi";
+import { useSelector } from "react-redux";
+import PostCard from "../../Home/components/PostCard";
+import { BiRepost } from "react-icons/bi";
+import PostCardSkeleton from "../../Skeletons/PostCardSkeleton";
 
 const AllPosts = () => {
   const { currentUser } = useSelector((state) => state.auth);
 
-      const { data: posts } = useGetPostsQuery();
-      const userPosts = posts?.filter((post) => post?.uid === currentUser?.uid);
-      const { data: reposts, error } = useGetAllRepostsQuery();
-      const userReposts = reposts?.filter(
-        (repost) => repost.userID === currentUser?.uid
-      );
+  const { data: posts, isLoading } = useGetPostsQuery();
+  const userPosts = posts?.filter((post) => post?.uid === currentUser?.uid);
+  const {
+    data: reposts,
+    error,
+    isLoading: repostsLoading,
+  } = useGetAllRepostsQuery();
+  const userReposts = reposts?.filter(
+    (repost) => repost.userID === currentUser?.uid
+  );
 
-      //   console.log(userReposts);
+  //   console.log(userReposts);
 
-      const repostPostIDs = userReposts?.map((repost) => repost.postID);
+  const repostPostIDs = userReposts?.map((repost) => repost.postID);
 
-      // Filter posts that match the repostPostIDs
-      const userRepostedPosts = posts?.filter((post) =>
-        repostPostIDs?.includes(post.id)
-      );
+  // Filter posts that match the repostPostIDs
+  const userRepostedPosts = posts?.filter((post) =>
+    repostPostIDs?.includes(post.id)
+  );
 
   // Combine and sort posts
   const allPosts = [
     ...(Array.isArray(userPosts) ? userPosts : []),
     ...(Array.isArray(userRepostedPosts) ? userRepostedPosts : []),
   ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  if (isLoading || repostsLoading) {
+    return [...Array(4)].map((_, index) => <PostCardSkeleton key={index} />);
+  }
   return (
     <div className="space-y-4 ">
       {/* Display all posts mixed with reposts */}
@@ -51,6 +60,6 @@ const AllPosts = () => {
       )}
     </div>
   );
-}
+};
 
-export default AllPosts
+export default AllPosts;

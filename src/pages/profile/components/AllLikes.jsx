@@ -3,15 +3,17 @@ import { useSelector } from "react-redux";
 import { useGetUserLikesQuery } from "../../../redux/likesApi";
 import { useGetPostsQuery } from "../../../redux/postsApi";
 import PostCard from "../../Home/components/PostCard";
+import PostCardSkeleton from "../../Skeletons/PostCardSkeleton";
 
 const AllLikes = () => {
   const { currentUser } = useSelector((state) => state.auth);
 
   // Fetch all posts
-  const { data: posts = [] } = useGetPostsQuery();
+  const { data: posts = [], isLoading } = useGetPostsQuery();
 
   // Fetch user likes
-  const { data: userLikes = [] } = useGetUserLikesQuery(currentUser?.uid);
+  const { data: userLikes = [], isLoading: likesLoading } =
+    useGetUserLikesQuery(currentUser?.uid);
 
   const likedPosts = posts
     .filter((post) => userLikes.some((like) => like.postID === post.id))
@@ -23,7 +25,10 @@ const AllLikes = () => {
       return timestampB - timestampA;
     });
 
-//   console.log("Liked Posts:", likedPosts);
+  //   console.log("Liked Posts:", likedPosts);
+  if (isLoading || likesLoading) {
+    return [...Array(4)].map((_, index) => <PostCardSkeleton key={index} />);
+  }
 
   return (
     <div className="space-y-4">
