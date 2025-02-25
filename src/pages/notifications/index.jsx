@@ -58,7 +58,7 @@ const Notifications = () => {
                       notif?.photoURL || "images/User-Profile-PNG-Clipart.png"
                     }
                     alt="profile"
-                    className="size-8 rounded-full"
+                    className="size-6 md:size-8 rounded-full"
                   />
                   <p className="text-nowrap">
                     {notif?.displayName || "User Name"}
@@ -71,7 +71,7 @@ const Notifications = () => {
             {["like", "comment", "repost"].includes(notif.type) && (
               <button
                 onClick={() => handleVisitPost(notif.postId, notif.id)}
-                className="flex justify-start items-center gap-2 md:gap-4 w-full text-left text-[9px] xs:text-[13px] md:text-lg"
+                className="flex justify-start items-center gap-1 md:gap-2 w-full text-left text-[8px] xs:text-[13px] md:text-lg"
               >
                 <Link
                   to={`/profile/${notif.fromUserId}`}
@@ -83,7 +83,7 @@ const Notifications = () => {
                       notif?.photoURL || "images/User-Profile-PNG-Clipart.png"
                     }
                     alt="profile"
-                    className="size-8 rounded-full"
+                    className="size-6 md:size-8 rounded-full"
                   />
                   <p className="text-nowrap">
                     {notif?.displayName || "User Name"}
@@ -105,6 +105,5 @@ const Notifications = () => {
     </div>
   );
 };
-
 
 export default Notifications;
