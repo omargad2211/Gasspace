@@ -286,12 +286,13 @@ const PostCard = ({ post }) => {
               <FaRegHeart />
             )}
           </button>
-          <p
+          <Link
+            to={`/post/${post?.id}`}
             className="cursor-pointer hover:underline"
             onClick={() => setShowLikes((prev) => !prev)}
           >
             {likes.length} Likes
-          </p>
+          </Link>
 
           {/* Toggle Comments Section */}
           <button
@@ -299,7 +300,7 @@ const PostCard = ({ post }) => {
             className="flex items-center justify-center gap-1"
           >
             <AiOutlineMessage />
-            <p>{comments?.length} comments</p>
+            <Link to={`/post/${post?.id}`}>{comments?.length} comments</Link>
           </button>
 
           {/* Repost Button */}
