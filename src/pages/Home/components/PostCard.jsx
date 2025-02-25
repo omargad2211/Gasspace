@@ -274,25 +274,27 @@ const PostCard = ({ post }) => {
       )}
       {/* Post Actions */}
       <div className="w-full border-t mt-3 p-2 text-gray-500 flex justify-between items-center gap-4 text-sm md:text-base">
-        <div className="flex justify-start items-center gap-4">
+        <div className="flex justify-around items-center w-full gap-2">
           {/* Like Button */}
-          <button
-            onClick={handleLike}
-            className="flex items-center justify-center gap-1"
-          >
-            {isLikedByUser ? (
-              <FaHeart className="text-red-500" />
-            ) : (
-              <FaRegHeart />
-            )}
-          </button>
-          <Link
-            to={`/post/${post?.id}`}
-            className="cursor-pointer hover:underline"
-            onClick={() => setShowLikes((prev) => !prev)}
-          >
-            {likes.length} Likes
-          </Link>
+          <div className="flex items-center justify-center gap-1">
+            <button
+              onClick={handleLike}
+              className="flex items-center justify-center gap-1"
+            >
+              {isLikedByUser ? (
+                <FaHeart className="text-red-500" />
+              ) : (
+                <FaRegHeart />
+              )}
+            </button>
+            <Link
+              to={`/post/${post?.id}`}
+              className="cursor-pointer hover:underline flex items-center gap-1 "
+              onClick={() => setShowLikes((prev) => !prev)}
+            >
+              {likes.length} <span className="hidden ss:block">Likes</span>
+            </Link>
+          </div>
 
           {/* Toggle Comments Section */}
           <button
@@ -300,7 +302,13 @@ const PostCard = ({ post }) => {
             className="flex items-center justify-center gap-1"
           >
             <AiOutlineMessage />
-            <Link to={`/post/${post?.id}`}>{comments?.length} comments</Link>
+            <Link
+              className="cursor-pointer hover:underline flex items-center gap-1 "
+              to={`/post/${post?.id}`}
+            >
+              {comments?.length}{" "}
+              <span className="hidden ss:block ">comments</span>
+            </Link>
           </button>
 
           {/* Repost Button */}
@@ -311,7 +319,9 @@ const PostCard = ({ post }) => {
             }`}
           >
             <BiRepost className="text-xl" />
-            <p>{reposts.length} reposts</p>
+            <p className="flex gap-1">
+              {reposts.length} <span className="hidden ss:block">reposts</span>{" "}
+            </p>
           </button>
         </div>
         {/* saved button  */}
