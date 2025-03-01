@@ -33,6 +33,7 @@ import {
   useEditPostMutation,
 } from "../../../redux/postsApi";
 import { addToWishlist, removeFromWishlist } from "../../../redux/savedSlice";
+import { useGetAllUsersQuery } from "../../../redux/authApi";
 
 const PostCard = ({ post }) => {
   // console.log(post);
@@ -182,6 +183,11 @@ const PostCard = ({ post }) => {
       );
     }
   };
+
+  // get post user
+  const { data: users, error } = useGetAllUsersQuery();
+  const postUser = users?.find((user) => user?.uid === post?.uid);
+  // console.log(postUser);
   return (
     <div className="bg-white p-2 mt-2 shadow-md rounded-lg relative ">
       {/* Post Header */}
@@ -191,13 +197,13 @@ const PostCard = ({ post }) => {
           className="flex justify-start items-center gap-2"
         >
           <img
-            src={post?.photoURL}
+            src={postUser?.photoURL}
             alt="profile"
             className="size-8 rounded-full"
           />
           <div className="flex flex-col">
             <p className="text-black text-sm font-semibold">
-              {post?.displayName}
+              {postUser?.displayName}
             </p>
             <p className="text-gray-500 text-xs">
               {formatTimestamp(post?.timestamp)}

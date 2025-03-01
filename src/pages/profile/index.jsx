@@ -200,7 +200,7 @@ const Profile = () => {
 
               <button
                 type="submit"
-                className="btn btn-primary w-full"
+                className="bg-[#D9F8FF] text-blue-700 px-4 hover:bg-[#a9efff] py-2 rounded-lg"
                 disabled={isLoading}
               >
                 {isLoading ? "Updating..." : "Save Changes"}
