@@ -16,6 +16,7 @@ import AllLikes from "./pages/profile/components/AllLikes";
 import SavedPosts from "./pages/profile/components/SavedPosts";
 import UserPosts from "./pages/users/components/UserPosts";
 import UserLikes from "./pages/users/components/UserLikes";
+import SearchPage from "./pages/search";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route element={<ProtectedLayout />}>
             <Route path="/profile" element={<Profile />}>
               <Route index element={<Navigate to="posts" replace />} />
